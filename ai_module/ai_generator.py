@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyB2HGHX6wTGnarB2ioBeLDxV0mgG9KAFaQ")
+genai.configure(api_key="YOUR_API_KEY")
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 
@@ -17,9 +17,9 @@ Festival: {festival}
 Location: {location}
 
 Generate:
-1 Caption
+Caption
 5 Hashtags
-1 Call to action
+Call to action
 """
 
     try:
@@ -29,12 +29,11 @@ Generate:
 
         return {
             "caption": text,
-            "hashtags": "#sale #discount #offer #festival #shoplocal",
+            "hashtags": "#sale #discount #offer #festival",
             "cta": "Visit our store today!"
         }
 
     except:
-        # fallback if AI fails
         return {
             "caption": f"{business} is offering {offer} on {product} this {festival}! Visit us in {location}.",
             "hashtags": "#sale #discount #offer",
