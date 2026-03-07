@@ -6,6 +6,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+from flask import send_from_directory
+
+@app.route('/poster/<filename>')
+def get_poster(filename):
+    return send_from_directory('posters', filename)
 
 from ai_module.ai_generator import generate_marketing_content
 from poster_engine.poster_generator import generate_poster
