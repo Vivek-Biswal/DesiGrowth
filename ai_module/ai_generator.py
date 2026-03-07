@@ -1,29 +1,25 @@
 import google.generativeai as genai
 
-# Configure API key
-genai.configure(api_key="YOUR_API_KEY_HERE")
+genai.configure(api_key="AIzaSyB2HGHX6wTGnarB2ioBeLDxV0mgG9KAFaQ")
 
-# Load Gemini model
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 
 def generate_marketing_content(business, product, offer, festival, location):
 
     prompt = f"""
-Create a short marketing advertisement for a small local business.
+Create a short marketing advertisement.
 
-Business Name: {business}
+Business: {business}
 Product: {product}
 Offer: {offer}
 Festival: {festival}
 Location: {location}
 
 Generate:
-1. Caption
-2. 5 marketing hashtags
-3. Call-to-action
-
-Make it attractive for social media marketing.
+1 Caption
+5 Hashtags
+1 Call to action
 """
 
     try:
@@ -33,27 +29,14 @@ Make it attractive for social media marketing.
 
         return {
             "caption": text,
-            "hashtags": "#sale #discount #localbusiness #offer #festival",
+            "hashtags": "#sale #discount #offer #festival #shoplocal",
             "cta": "Visit our store today!"
         }
 
-    except Exception as e:
-        # fallback if API fails
+    except:
+        # fallback if AI fails
         return {
             "caption": f"{business} is offering {offer} on {product} this {festival}! Visit us in {location}.",
             "hashtags": "#sale #discount #offer",
             "cta": "Visit our store today!"
         }
-
-
-if __name__ == "__main__":
-
-    result = generate_marketing_content(
-        "Sharma Grocery",
-        "Premium Rice",
-        "20% OFF",
-        "Diwali",
-        "Delhi"
-    )
-
-    print(result)

@@ -1,16 +1,16 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-
-# Import AI module
+from flask_cors import CORS, cross_origin
 from ai_module.ai_generator import generate_marketing_content
-
-# Import poster generator
 from poster_engine.poster_generator import generate_poster
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../poster_engine/generated")
 CORS(app)
 
-# Store campaign history
 campaign_history = []
 
 
@@ -20,6 +20,7 @@ def home():
 
 
 @app.route("/generate-campaign", methods=["POST"])
+@cross_origin()
 def generate_campaign():
 
     data = request.json
@@ -30,7 +31,6 @@ def generate_campaign():
     festival = data.get("festival")
     location = data.get("location")
 
-    # Call AI generator
     ai_result = generate_marketing_content(
         business,
         product,
@@ -43,7 +43,6 @@ def generate_campaign():
     hashtags = ai_result["hashtags"]
     cta = ai_result["cta"]
 
-    # Generate poster
     poster_path = generate_poster(
         business,
         product,
@@ -52,14 +51,17 @@ def generate_campaign():
         ""
     )
 
+    filename = os.path.basename(poster_path)
+
+    poster_url = f"http://127.0.0.1:5000/{filename}"
+
     response = {
         "caption": caption,
         "hashtags": hashtags,
         "cta": cta,
-        "poster": poster_path
+        "poster": poster_url
     }
 
-    # Save campaign to history
     campaign_history.append({
         "business": business,
         "product": product,
