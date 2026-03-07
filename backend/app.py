@@ -1,36 +1,70 @@
-import sys
 import os
-
-# allow backend to access project modules
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import uuid
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from flask import send_from_directory
+from PIL import Image, ImageDraw, ImageFont
 
-@app.route('/poster/<filename>')
-def get_poster(filename):
-    return send_from_directory('posters', filename)
-
+# Import AI generator
 from ai_module.ai_generator import generate_marketing_content
-from poster_engine.poster_generator import generate_poster
+
 
 app = Flask(__name__)
 CORS(app)
 
-campaign_history = []
+# Poster folder
+POSTER_FOLDER = "posters"
+os.makedirs(POSTER_FOLDER, exist_ok=True)
 
+
+# ================================
+# HOME ROUTE
+# ================================
 
 @app.route("/")
 def home():
     return "DesiGrowth Backend Running"
 
 
-# Serve generated poster images
-@app.route("/poster/<filename>")
-def get_poster(filename):
-    return send_from_directory("../poster_engine/generated", filename)
+# ================================
+# POSTER GENERATOR
+# ================================
 
+def create_poster(business, product, offer):
+
+    width = 800
+    height = 800
+
+    img = Image.new("RGB", (width, height), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    try:
+        title_font = ImageFont.truetype("arial.ttf", 60)
+        text_font = ImageFont.truetype("arial.ttf", 40)
+    except:
+        title_font = ImageFont.load_default()
+        text_font = ImageFont.load_default()
+
+    # Title
+    draw.text((100, 100), business, fill="black", font=title_font)
+
+    # Product
+    draw.text((100, 300), product, fill="blue", font=text_font)
+
+    # Offer
+    draw.text((100, 450), offer, fill="red", font=text_font)
+
+    filename = f"poster_{uuid.uuid4().hex}.png"
+    path = os.path.join(POSTER_FOLDER, filename)
+
+    img.save(path)
+
+    return filename
+
+
+# ================================
+# GENERATE CAMPAIGN API
+# ================================
 
 @app.route("/generate-campaign", methods=["POST"])
 def generate_campaign():
@@ -43,7 +77,7 @@ def generate_campaign():
     festival = data.get("festival")
     location = data.get("location")
 
-    # Generate marketing content
+    # AI content
     ai_result = generate_marketing_content(
         business,
         product,
@@ -52,53 +86,35 @@ def generate_campaign():
         location
     )
 
-    caption = ai_result["caption"]
-    hashtags = ai_result["hashtags"]
-    cta = ai_result["cta"]
-
     # Generate poster
-    poster_path = generate_poster(
-        business,
-        product,
-        offer,
-        caption,
-        ""
-    )
+    poster_filename = create_poster(business, product, offer)
 
-    filename = os.path.basename(poster_path)
+    poster_url = f"https://desigrowth-2.onrender.com/poster/{poster_filename}"
 
-    # Correct poster URL
-    poster_url = f"http://127.0.0.1:5000/poster/{filename}"
-
-    response = {
-        "caption": caption,
-        "hashtags": hashtags,
-        "cta": cta,
+    return jsonify({
+        "caption": ai_result["caption"],
+        "hashtags": ai_result["hashtags"],
         "poster": poster_url
-    }
-
-    campaign_history.append({
-        "business": business,
-        "product": product,
-        "offer": offer,
-        "festival": festival,
-        "location": location,
-        "caption": caption
     })
 
-    return jsonify(response)
+
+# ================================
+# SERVE POSTER FILES
+# ================================
+
+@app.route("/poster/<filename>")
+def serve_poster(filename):
+    return send_from_directory(POSTER_FOLDER, filename)
 
 
-@app.route("/campaign-history", methods=["GET"])
-def get_campaign_history():
-    return jsonify(campaign_history)
-
+# ================================
+# RUN SERVER
+# ================================
 
 if __name__ == "__main__":
-    import os
-    
+
     port = int(os.environ.get("PORT", 5000))
-    
+
     app.run(
         host="0.0.0.0",
         port=port
