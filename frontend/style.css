@@ -1,1 +1,43 @@
+/* DesiGrowth Global Styles */
+
+/* Reset small browser inconsistencies */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+/* Global body styling */
+body {
+font-family: Arial, Helvetica, sans-serif;
+background-color: #f3f4f6;
+}
+
+/* Smooth button interaction */
+button {
+transition: all 0.2s ease-in-out;
+}
+
+/* Improve image display */
+img {
+max-width: 100%;
+height: auto;
+}
+
+/* Form input improvements */
+input {
+outline: none;
+}
+
+/* Slight focus highlight for inputs */
+input:focus {
+border-color: #2563eb;
+}
+
+/* Poster preview styling */
+#poster {
+max-height: 400px;
+object-fit: contain;
+}
 
