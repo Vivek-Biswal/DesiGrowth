@@ -1,29 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+# Import AI module
+from ai_module.ai_generator import generate_marketing_content
+
+# Import poster generator
+from poster_engine.poster_generator import generate_poster
+
 app = Flask(__name__)
 CORS(app)
 
-# Temporary storage for campaigns
+# Store campaign history
 campaign_history = []
-
-# Try importing AI module
-try:
-    from ai_module.ai_generator import generate_marketing_content
-except:
-    def generate_marketing_content(business, product, offer, festival, location):
-        return {
-            "caption": f"{business} is offering {offer} on {product} for {festival}!",
-            "hashtags": "#sale #discount #festival",
-            "cta": "Visit our store today!"
-        }
-
-# Try importing poster generator
-try:
-    from poster_engine.poster_generator import generate_poster
-except:
-    def generate_poster(business, product, offer, caption, image_path):
-        return "generated_poster.png"
 
 
 @app.route("/")
@@ -42,7 +30,7 @@ def generate_campaign():
     festival = data.get("festival")
     location = data.get("location")
 
-    # Generate marketing content
+    # Call AI generator
     ai_result = generate_marketing_content(
         business,
         product,
@@ -61,7 +49,7 @@ def generate_campaign():
         product,
         offer,
         caption,
-        "product.jpg"
+        ""
     )
 
     response = {
