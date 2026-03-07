@@ -4,6 +4,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+# Temporary storage for campaigns
+campaign_history = []
+
 # Try importing AI module
 try:
     from ai_module.ai_generator import generate_marketing_content
@@ -68,7 +71,22 @@ def generate_campaign():
         "poster": poster_path
     }
 
+    # Save campaign to history
+    campaign_history.append({
+        "business": business,
+        "product": product,
+        "offer": offer,
+        "festival": festival,
+        "location": location,
+        "caption": caption
+    })
+
     return jsonify(response)
+
+
+@app.route("/campaign-history", methods=["GET"])
+def get_campaign_history():
+    return jsonify(campaign_history)
 
 
 if __name__ == "__main__":
