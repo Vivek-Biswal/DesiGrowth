@@ -1,3 +1,7 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import os
 import uuid
 
@@ -8,51 +12,48 @@ from PIL import Image, ImageDraw, ImageFont
 # Import AI generator
 from ai_module.ai_generator import generate_marketing_content
 
-
+# Create Flask app FIRST
 app = Flask(__name__)
 CORS(app)
 
 # Poster folder
-POSTER_FOLDER = "posters"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+POSTER_FOLDER = os.path.join(BASE_DIR, "posters")
+
 os.makedirs(POSTER_FOLDER, exist_ok=True)
 
 
-# ================================
+# ==============================
 # HOME ROUTE
-# ================================
+# ==============================
 
 @app.route("/")
 def home():
     return "DesiGrowth Backend Running"
 
 
-# ================================
+# ==============================
 # POSTER GENERATOR
-# ================================
+# ==============================
 
 def create_poster(business, product, offer):
 
     width = 800
     height = 800
 
-    img = Image.new("RGB", (width, height), color=(255, 255, 255))
+    img = Image.new("RGB", (width, height), (255, 255, 255))
     draw = ImageDraw.Draw(img)
 
     try:
-        title_font = ImageFont.truetype("arial.ttf", 60)
-        text_font = ImageFont.truetype("arial.ttf", 40)
+        font1 = ImageFont.truetype("arial.ttf", 60)
+        font2 = ImageFont.truetype("arial.ttf", 40)
     except:
-        title_font = ImageFont.load_default()
-        text_font = ImageFont.load_default()
+        font1 = ImageFont.load_default()
+        font2 = ImageFont.load_default()
 
-    # Title
-    draw.text((100, 100), business, fill="black", font=title_font)
-
-    # Product
-    draw.text((100, 300), product, fill="blue", font=text_font)
-
-    # Offer
-    draw.text((100, 450), offer, fill="red", font=text_font)
+    draw.text((100,100), business, fill="black", font=font1)
+    draw.text((100,300), product, fill="blue", font=font2)
+    draw.text((100,450), offer, fill="red", font=font2)
 
     filename = f"poster_{uuid.uuid4().hex}.png"
     path = os.path.join(POSTER_FOLDER, filename)
@@ -62,9 +63,9 @@ def create_poster(business, product, offer):
     return filename
 
 
-# ================================
+# ==============================
 # GENERATE CAMPAIGN API
-# ================================
+# ==============================
 
 @app.route("/generate-campaign", methods=["POST"])
 def generate_campaign():
@@ -89,27 +90,27 @@ def generate_campaign():
     # Generate poster
     poster_filename = create_poster(business, product, offer)
 
-    poster_url = f"https://desigrowth-2.onrender.com/poster/{poster_filename}"
+    poster_url = request.host_url + "poster/" + poster_filename
 
     return jsonify({
-        "caption": ai_result["caption"],
-        "hashtags": ai_result["hashtags"],
+        "caption": ai_result.get("caption", ""),
+        "hashtags": ai_result.get("hashtags", ""),
         "poster": poster_url
     })
 
 
-# ================================
-# SERVE POSTER FILES
-# ================================
+# ==============================
+# SERVE POSTER FILE
+# ==============================
 
 @app.route("/poster/<filename>")
 def serve_poster(filename):
     return send_from_directory(POSTER_FOLDER, filename)
 
 
-# ================================
+# ==============================
 # RUN SERVER
-# ================================
+# ==============================
 
 if __name__ == "__main__":
 
