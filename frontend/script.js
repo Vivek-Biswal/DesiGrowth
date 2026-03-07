@@ -31,7 +31,7 @@ if (form) {
 
     try {
 
-      const response = await fetch("http://127.0.0.1:5000/generate-campaign", {
+      const response = await fetch("https://desigrowth-2.onrender.com/generate-campaign", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
