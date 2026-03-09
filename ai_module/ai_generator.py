@@ -1,6 +1,6 @@
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyB2HGHX6wTGnarB2ioBeLDxV0mgG9KAFaQ")
+genai.configure(api_key="YOUR_API_KEY")
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 
@@ -8,41 +8,34 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 def generate_marketing_content(business, product, offer, festival, location):
 
     prompt = f"""
-    Create a marketing advertisement for a small business.
+Create a short marketing advertisement.
 
-    Business Name: {business}
-    Product: {product}
-    Offer: {offer}
-    Festival: {festival}
-    Location: {location}
+Business: {business}
+Product: {product}
+Offer: {offer}
+Festival: {festival}
+Location: {location}
 
-    Generate:
-    1. Caption
-    2. 5 marketing hashtags
-    3. Call to action
+Generate:
+Caption
+5 Hashtags
+Call to action
+"""
 
-    Keep it short and attractive for social media marketing.
-    """
+    try:
+        response = model.generate_content(prompt)
 
-    response = model.generate_content(prompt)
+        text = response.text
 
-    text = response.text
+        return {
+            "caption": text,
+            "hashtags": "#sale #discount #offer #festival",
+            "cta": "Visit our store today!"
+        }
 
-    return {
-        "caption": text,
-        "hashtags": "",
-        "cta": ""
-    }
-
-
-if __name__ == "__main__":
-
-    result = generate_marketing_content(
-        "Sharma Grocery",
-        "Premium Rice",
-        "20% OFF",
-        "Diwali",
-        "Delhi"
-    )
-
-    print(result)
+    except:
+        return {
+            "caption": f"{business} is offering {offer} on {product} this {festival}! Visit us in {location}.",
+            "hashtags": "#sale #discount #offer",
+            "cta": "Visit our store today!"
+        }

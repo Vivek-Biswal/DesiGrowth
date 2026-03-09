@@ -1,35 +1,71 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import sys
+import os
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import os
+import uuid
+
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
+from PIL import Image, ImageDraw, ImageFont
+
+# Import AI generator
+from ai_module.ai_generator import generate_marketing_content
+
+# Create Flask app FIRST
 app = Flask(__name__)
 CORS(app)
 
-# Temporary storage for campaigns
-campaign_history = []
+# Poster folder
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+POSTER_FOLDER = os.path.join(BASE_DIR, "posters")
 
-# Try importing AI module
-try:
-    from ai_module.ai_generator import generate_marketing_content
-except:
-    def generate_marketing_content(business, product, offer, festival, location):
-        return {
-            "caption": f"{business} is offering {offer} on {product} for {festival}!",
-            "hashtags": "#sale #discount #festival",
-            "cta": "Visit our store today!"
-        }
+os.makedirs(POSTER_FOLDER, exist_ok=True)
 
-# Try importing poster generator
-try:
-    from poster_engine.poster_generator import generate_poster
-except:
-    def generate_poster(business, product, offer, caption, image_path):
-        return "generated_poster.png"
 
+# ==============================
+# HOME ROUTE
+# ==============================
 
 @app.route("/")
 def home():
     return "DesiGrowth Backend Running"
 
+
+# ==============================
+# POSTER GENERATOR
+# ==============================
+
+def create_poster(business, product, offer):
+
+    width = 800
+    height = 800
+
+    img = Image.new("RGB", (width, height), (255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    try:
+        font1 = ImageFont.truetype("arial.ttf", 60)
+        font2 = ImageFont.truetype("arial.ttf", 40)
+    except:
+        font1 = ImageFont.load_default()
+        font2 = ImageFont.load_default()
+
+    draw.text((100,100), business, fill="black", font=font1)
+    draw.text((100,300), product, fill="blue", font=font2)
+    draw.text((100,450), offer, fill="red", font=font2)
+
+    filename = f"poster_{uuid.uuid4().hex}.png"
+    path = os.path.join(POSTER_FOLDER, filename)
+
+    img.save(path)
+
+    return filename
+
+
+# ==============================
+# GENERATE CAMPAIGN API
+# ==============================
 
 @app.route("/generate-campaign", methods=["POST"])
 def generate_campaign():
@@ -42,7 +78,7 @@ def generate_campaign():
     festival = data.get("festival")
     location = data.get("location")
 
-    # Generate marketing content
+    # AI content
     ai_result = generate_marketing_content(
         business,
         product,
@@ -51,43 +87,36 @@ def generate_campaign():
         location
     )
 
-    caption = ai_result["caption"]
-    hashtags = ai_result["hashtags"]
-    cta = ai_result["cta"]
-
     # Generate poster
-    poster_path = generate_poster(
-        business,
-        product,
-        offer,
-        caption,
-        "product.jpg"
-    )
+    poster_filename = create_poster(business, product, offer)
 
-    response = {
-        "caption": caption,
-        "hashtags": hashtags,
-        "cta": cta,
-        "poster": poster_path
-    }
+    poster_url = request.host_url + "poster/" + poster_filename
 
-    # Save campaign to history
-    campaign_history.append({
-        "business": business,
-        "product": product,
-        "offer": offer,
-        "festival": festival,
-        "location": location,
-        "caption": caption
+    return jsonify({
+        "caption": ai_result.get("caption", ""),
+        "hashtags": ai_result.get("hashtags", ""),
+        "poster": poster_url
     })
 
-    return jsonify(response)
+
+# ==============================
+# SERVE POSTER FILE
+# ==============================
+
+@app.route("/poster/<filename>")
+def serve_poster(filename):
+    return send_from_directory(POSTER_FOLDER, filename)
 
 
-@app.route("/campaign-history", methods=["GET"])
-def get_campaign_history():
-    return jsonify(campaign_history)
-
+# ==============================
+# RUN SERVER
+# ==============================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    port = int(os.environ.get("PORT", 5000))
+
+    app.run(
+        host="0.0.0.0",
+        port=port
+    )
