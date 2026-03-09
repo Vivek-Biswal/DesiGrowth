@@ -107,7 +107,6 @@ def generate_campaign():
 def serve_poster(filename):
     return send_from_directory(POSTER_FOLDER, filename)
 
-
 # ==============================
 # RUN SERVER
 # ==============================
