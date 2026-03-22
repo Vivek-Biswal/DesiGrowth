@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
@@ -11,7 +12,9 @@ class Config:
 
     # JWT
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "fallback-jwt-secret")
-    JWT_ACCESS_TOKEN_EXPIRES = False  # Tokens don't expire (good for hackathon demo)
+    from datetime import timedelta
+
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=1)
 
     # Gemini
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")

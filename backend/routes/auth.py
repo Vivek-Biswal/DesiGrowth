@@ -9,6 +9,7 @@ Authentication routes:
   GET  /user                - Get current user profile (JWT required)
 """
 
+import email
 import uuid
 from datetime import datetime, timezone
 
@@ -105,7 +106,8 @@ def login():
     users = get_users_table()
     User = Query()
 
-    results = users.search(User.email == data["email"].lower())
+    email = data["email"].lower().strip()
+    results = users.search(User.email == email)
     if not results:
         return error("Invalid email or password.", 401)
 

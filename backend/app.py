@@ -4,12 +4,13 @@ from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 import os
 
-# Load env
-load_dotenv()
-
 # Config + DB
 from config import Config
 from models.db import init_db
+
+# Load env
+load_dotenv()
+
 
 # Routes
 from routes.auth import auth_bp
@@ -36,9 +37,9 @@ def create_app():
         print(f"{request.method} {request.path}")
 
     # Blueprints
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(campaign_bp)
-    app.register_blueprint(ai_bp)
+    app.register_blueprint(auth_bp, url_prefix="/api")
+    app.register_blueprint(campaign_bp, url_prefix="/api")
+    app.register_blueprint(ai_bp, url_prefix="/api")
 
     # Health check
     @app.route("/")

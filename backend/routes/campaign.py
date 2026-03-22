@@ -7,8 +7,7 @@ Campaign routes (all require a valid JWT token):
   GET  /campaign/<id>         - Get a single campaign by ID
 """
 
-import os
-import sys
+
 import uuid
 from datetime import datetime, timezone
 
@@ -19,7 +18,6 @@ from PIL import Image, ImageDraw, ImageFont
 from models.db import Query, get_campaigns_table
 
 # Allow importing ai_module from the project root
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from ai_module.ai_generator import generate_marketing_content
 
 from utils.helpers import error, require_fields, success
@@ -75,10 +73,12 @@ def create_campaign():
     ai_result = generate_marketing_content(business, product, offer, festival, location)
     caption = ai_result.get("caption", "")
     hashtags = ai_result.get("hashtags", "")
+    if isinstance(hashtags, str):
+        hashtags = [tag.strip() for tag in hashtags.split() if tag.startswith("#")]
 
     # ── Poster ──
     poster_filename = _create_poster(business, product, offer, current_app)
-    poster_url = request.host_url + "poster/" + poster_filename
+    poster_url = request.host_url.rstrip("/") + "/poster/" + poster_filename
 
     # ── Save to DB ──
     campaign = {

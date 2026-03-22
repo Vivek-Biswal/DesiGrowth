@@ -5,26 +5,20 @@ AI content generation route:
   POST /generate-content  - Generate marketing caption, hashtags, and campaign idea
 """
 
-import os
-import sys
-
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 
 # Allow importing ai_module from the project root
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from ai_module.ai_generator import generate_marketing_content
 
 from utils.helpers import error, require_fields, success
 
 ai_bp = Blueprint("ai", __name__)
 
-
 # ──────────────────────────────────────────────
 # POST /generate-content
 # ──────────────────────────────────────────────
 @ai_bp.route("/generate-content", methods=["POST"])
-@jwt_required()
 def generate_content():
     """
     Generate AI marketing content for a product.
@@ -86,3 +80,18 @@ def generate_content():
             "idea": result.get("idea", result.get("cta", "Visit our store today!")),
         }
     )
+@ai_bp.route("/generate-campaign", methods=["POST"])
+def generate_campaign_legacy():
+    data = request.get_json()
+
+    result = generate_marketing_content(
+        business=data.get("business", ""),
+        product=data.get("product", ""),
+        offer=data.get("offer", "")
+    )
+
+    return success({
+        "caption": result.get("caption", ""),
+        "hashtags": result.get("hashtags", ""),
+        "idea": result.get("idea", "")
+    })
