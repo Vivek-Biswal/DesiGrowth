@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DesiGrowth | AI Marketing for Small Businesses</title>
-
   <script src="https://cdn.tailwindcss.com"></script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .hero-gradient { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fff 100%); }
+    .float { animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .fade-up { animation: fadeUp 0.6s ease both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+  </style>
 </head>
+<body class="bg-white">
 
-<body class="bg-gray-50">
-
-<!-- Navigation -->
-<nav class="bg-white shadow">
+<!-- ── Navigation ── -->
+<nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
   <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-
-    <h1 class="text-2xl font-bold text-blue-600">
-      DesiGrowth
-    </h1>
-
-    <a href="dashboard.html" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">
-      Open Dashboard
-    </a>
-
+    <a href="#" class="text-2xl font-extrabold text-orange-500">🌱 DesiGrowth</a>
+    <div class="flex items-center gap-3">
+      <a href="./pages/login.html" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition px-4 py-2">Login</a>
+      <a href="./pages/login.html" class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition hover:scale-105 active:scale-95">
+        Get Started Free
+      </a>
+    </div>
   </div>
 </nav>
 
