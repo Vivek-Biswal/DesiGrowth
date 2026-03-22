@@ -1,4 +1,24 @@
+# DesiGrowth — Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Web framework
 flask
 flask-cors
+
+# Authentication
+flask-jwt-extended
+bcrypt
+authlib
+requests
+
+# Database
+tinydb
+
+# AI
+google-genai
+
+# Image generation
 pillow
-google-generativeai
+
+# Config
+python-dotenv

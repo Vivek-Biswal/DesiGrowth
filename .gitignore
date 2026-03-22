@@ -1,2 +1,23 @@
+# Environment
 .env
-.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Generated posters (runtime output)
+backend/posters/
+poster_engine/generated/
+
+# Editor
+.vscode/
+.idea/
+*.swp
