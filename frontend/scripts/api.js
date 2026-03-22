@@ -5,7 +5,9 @@
 // To switch backend: change API_BASE below.
 // ============================================================
 
-const API_BASE = 'https://desigrowth-2.onrender.com';
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:5000'
+  : 'https://desigrowth-2.onrender.com';
 
 // ── Mock data ────────────────────────────────────────────────
 const _MOCK = {
