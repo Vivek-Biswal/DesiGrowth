@@ -1,7 +1,6 @@
-// ============================================================
-// DesiGrowth — Auth Module (scripts/auth.js)
-// Manages JWT token + user session in localStorage
-// ============================================================
+// ================================
+// Auth Module
+// ================================
 
 const DG_TOKEN_KEY = 'dg_token';
 const DG_USER_KEY  = 'dg_user';
@@ -25,20 +24,20 @@ function clearAuth() {
   localStorage.removeItem(DG_USER_KEY);
 }
 
+// ✅ FIXED LOGOUT
 function logout() {
   clearAuth();
-  const inPages = window.location.pathname.includes('/pages/');
-  window.location.href = inPages ? './login.html' : './pages/login.html';
+  window.location.href = "/frontend/pages/login.html";
 }
 
-/** Redirect to login if no token. Call at top of every protected page. */
+// ✅ FIXED AUTH CHECK
 function requireAuth() {
   if (!getToken()) {
-    const inPages = window.location.pathname.includes('/pages/');
-    window.location.href = inPages ? './login.html' : './pages/login.html';
+    window.location.href = "/frontend/pages/login.html";
   }
 }
 
+// Helpers
 function getUserDisplayName() {
   const u = getUser();
   return u ? (u.name || u.email || 'User') : 'User';

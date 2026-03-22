@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Campaign | DesiGrowth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 transition-opacity duration-300 opacity-0"
+      onload="document.body.classList.remove('opacity-0')">
+
+<div class="max-w-3xl mx-auto p-6">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">✨ Create Campaign</h1>
+    <a href="/frontend/pages/dashboard.html"
+       class="text-gray-500 text-sm">← Back</a>
+  </div>
+
+  <!-- Form -->
+  <div class="bg-white p-6 rounded-xl shadow space-y-4">
+
+    <input id="business" placeholder="Business Name"
+      class="w-full border p-3 rounded-lg">
+
+    <input id="product" placeholder="Product Name"
+      class="w-full border p-3 rounded-lg">
+
+    <input id="offer" placeholder="Offer (e.g. 50% OFF)"
+      class="w-full border p-3 rounded-lg">
+
+    <input id="festival" placeholder="Festival (optional)"
+      class="w-full border p-3 rounded-lg">
+
+    <input id="location" placeholder="Location (optional)"
+      class="w-full border p-3 rounded-lg">
+
+    <p id="error" class="text-red-500 text-sm hidden"></p>
+
+    <button onclick="createCampaign()"
+      class="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold">
+      Generate Campaign 🚀
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ✅ FIXED PATHS -->
+<script src="/frontend/scripts/auth.js"></script>
+<script src="/frontend/scripts/api.js"></script>
+<script src="/frontend/scripts/app.js"></script>
+
+<script>
+requireAuth();
+
+async function createCampaign() {
+  const errorEl = document.getElementById('error');
+  errorEl.classList.add('hidden');
+
+  const data = {
+    business: document.getElementById('business').value,
+    product: document.getElementById('product').value,
+    offer: document.getElementById('offer').value,
+    festival: document.getElementById('festival').value,
+    location: document.getElementById('location').value
+  };
+
+  // Basic validation
+  if (!data.business || !data.product || !data.offer) {
+    errorEl.textContent = "Please fill all required fields";
+    errorEl.classList.remove('hidden');
+    return;
+  }
+
+  showLoading();
+
+  try {
+    const res = await api.createCampaign(data);
+
+    hideLoading();
+
+    // Save for preview page
+    localStorage.setItem("latest_campaign", JSON.stringify(res.campaign));
+
+    // Redirect
+    window.location.href = "/frontend/pages/preview.html";
+
+  } catch (err) {
+    hideLoading();
+    errorEl.textContent = err.message;
+    errorEl.classList.remove('hidden');
+  }
+}
+</script>
+
+</body>
+</html>

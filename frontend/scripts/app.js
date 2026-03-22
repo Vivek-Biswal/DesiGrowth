@@ -131,3 +131,34 @@ function statusBadge(status) {
   if (status === 'draft')     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">◷ Draft</span>`;
   return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">${status}</span>`;
 }
+function showLoading(message = "Generating your campaign...") {
+  if (document.getElementById('loader')) return;
+
+  const loader = document.createElement('div');
+  loader.id = 'loader';
+  loader.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+
+  loader.innerHTML = `
+    <div class="bg-white p-6 rounded-xl text-center shadow-xl">
+      <div class="animate-spin h-10 w-10 border-4 border-orange-400 border-t-transparent rounded-full mx-auto mb-4"></div>
+      <p class="text-gray-700 font-medium">${message}</p>
+    </div>
+  `;
+
+  document.body.appendChild(loader);
+}
+
+function hideLoading() {
+  const loader = document.getElementById('loader');
+  if (loader) loader.remove();
+}
+function showToast(message) {
+  const toast = document.createElement('div');
+
+  toast.className = "fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow";
+  toast.textContent = message;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.remove(), 3000);
+}

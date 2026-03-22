@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard | DesiGrowth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 transition-opacity duration-300 opacity-0"
+      onload="document.body.classList.remove('opacity-0')">
+
+<div class="max-w-6xl mx-auto p-6">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">📊 Dashboard</h1>
+    <div class="flex gap-3">
+      <a href="/frontend/pages/builder.html"
+         class="bg-orange-500 text-white px-4 py-2 rounded-lg">
+        + New Campaign
+      </a>
+      <button onclick="logout()"
+        class="bg-red-500 text-white px-4 py-2 rounded-lg">
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Campaigns -->
+  <div id="campaignContainer" class="grid md:grid-cols-2 gap-6"></div>
+
+</div>
+
+<!-- ✅ FIXED PATHS -->
+<script src="/frontend/scripts/auth.js"></script>
+<script src="/frontend/scripts/api.js"></script>
+
+<script>
+requireAuth();
+
+async function loadDashboard() {
+  const res = await api.getCampaigns();
+  const campaigns = res.campaigns;
+
+  const container = document.getElementById("campaignContainer");
+  container.innerHTML = "";
+
+  // ✅ EMPTY STATE
+  if (!campaigns.length) {
+    container.innerHTML = `
+      <div class="text-center text-gray-500 col-span-2">
+        <p>No campaigns yet 🚀</p>
+        <a href="/frontend/pages/builder.html"
+           class="text-orange-500 font-semibold">
+          Create your first campaign
+        </a>
+      </div>
+    `;
+    return;
+  }
+
+  // ✅ RENDER CAMPAIGNS
+  campaigns.forEach(c => {
+    container.innerHTML += `
+      <div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+
+        <div class="flex justify-between mb-2">
+          <h2 class="font-bold text-lg">${c.product}</h2>
+          <span class="text-green-600 text-sm font-medium">${c.offer}</span>
+        </div>
+
+        <p class="text-gray-600 text-sm mb-3">${c.caption}</p>
+
+        ${c.poster_url ? `<img src="${c.poster_url}" class="rounded-lg mb-3"/>` : ''}
+
+        <div class="flex flex-wrap gap-2 mb-2">
+          ${c.hashtags.map(tag => `<span class="text-xs bg-gray-100 px-2 py-1 rounded">${tag}</span>`).join("")}
+        </div>
+
+        <p class="text-xs text-gray-400">
+          ${new Date(c.created_at).toLocaleDateString()}
+        </p>
+
+      </div>
+    `;
+  });
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>

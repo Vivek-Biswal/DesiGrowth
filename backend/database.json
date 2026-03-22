@@ -1,1 +1,230 @@
-{}
+{
+  "campaigns": {
+    "1": {
+      "business": "Vivek Store",
+      "caption": "Vivek Store is offering 50% OFF on Shoes this Diwali in Delhi! Don\u2019t miss out.",
+      "created_at": "2026-03-22T15:20:44.441919+00:00",
+      "festival": "Diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "f4b45cfa7d4e4b72b906fdd6707df135",
+      "location": "Delhi",
+      "offer": "50% OFF",
+      "poster_url": "http://localhost:5000/poster/poster_b937384f1f484aaba28b2791cb49c5db.png",
+      "product": "Shoes",
+      "status": "generated",
+      "user_id": "12cd9a28345141d193fe31170fa9ff13"
+    },
+    "10": {
+      "business": "sneha",
+      "caption": "sneha is offering 20% OFF on colors this diwali in gurugram! Don\u2019t miss out.",
+      "created_at": "2026-03-22T17:47:15.157456+00:00",
+      "festival": "diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "185663ad7efb4133985f92395695ea14",
+      "location": "gurugram",
+      "offer": "20% OFF",
+      "poster_url": "http://localhost:5000/poster/poster_d504296cb52d4198aaad97e8273b53bd.png",
+      "product": "colors",
+      "status": "generated",
+      "user_id": "3039312a626b4e4c844e549000a38d00"
+    },
+    "2": {
+      "business": "Vivek Store",
+      "caption": "Vivek Store is offering 50% OFF on Shoes this Diwali in Delhi! Don\u2019t miss out.",
+      "created_at": "2026-03-22T15:20:46.663436+00:00",
+      "festival": "Diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "6f9cbd8179984f59b1fae783a7898958",
+      "location": "Delhi",
+      "offer": "50% OFF",
+      "poster_url": "http://localhost:5000/poster/poster_7680fb3b75bf4fffa28d17c66e4f7d60.png",
+      "product": "Shoes",
+      "status": "generated",
+      "user_id": "12cd9a28345141d193fe31170fa9ff13"
+    },
+    "3": {
+      "business": "vivek",
+      "caption": "vivek is offering 10% on apple this diwali in gurugram! Don\u2019t miss out.",
+      "created_at": "2026-03-22T15:45:29.680256+00:00",
+      "festival": "diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "57771c2588ef4192bcf7033a4dea1993",
+      "location": "gurugram",
+      "offer": "10%",
+      "poster_url": "http://localhost:5000/poster/poster_2246f994e46348468f8a8764d7d0f24e.png",
+      "product": "apple",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
+    "4": {
+      "business": "vivek",
+      "caption": "vivek is offering 10% on apple this diwali in gurugram! Don\u2019t miss out.",
+      "created_at": "2026-03-22T15:45:30.196112+00:00",
+      "festival": "diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "d83f2d15830346758e6c6207c74096e6",
+      "location": "gurugram",
+      "offer": "10%",
+      "poster_url": "http://localhost:5000/poster/poster_9ab56bb6a6994eaa9fd81a96bdd8381c.png",
+      "product": "apple",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
+    "5": {
+      "business": "ashwin",
+      "caption": "ashwin is offering 10% on apple this diwali in gurugram! Don\u2019t miss out.",
+      "created_at": "2026-03-22T15:45:54.010231+00:00",
+      "festival": "diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "87ed9e9e228842fa849e671ee4b1b589",
+      "location": "gurugram",
+      "offer": "10%",
+      "poster_url": "http://localhost:5000/poster/poster_f540e4270a0d49ac830671c611db2211.png",
+      "product": "apple",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
+    "6": {
+      "business": "amol",
+      "caption": "amol is offering 69% on Shoes this Eid in goa! Don\u2019t miss out.",
+      "created_at": "2026-03-22T15:50:36.468829+00:00",
+      "festival": "Eid",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "3a95636e29664f8abe059f892451c958",
+      "location": "goa",
+      "offer": "69%",
+      "poster_url": "http://localhost:5000/poster/poster_aa385e85da0a462face1f9dd39f797e3.png",
+      "product": "Shoes",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
+    "7": {
+      "business": "amol",
+      "caption": "amol is offering 70% on Shoes this Eid in goa! Don\u2019t miss out.",
+      "created_at": "2026-03-22T15:51:22.343609+00:00",
+      "festival": "Eid",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "1d15592e26db4796abd29331a9cf7547",
+      "location": "goa",
+      "offer": "70%",
+      "poster_url": "http://localhost:5000/poster/poster_9c88392e78a44e29a1f32b0187dd5eed.png",
+      "product": "Shoes",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
+    "8": {
+      "business": "vivek",
+      "caption": "vivek is offering 20% OFF on Premium Rice this Eid in gurugram! Don\u2019t miss out.",
+      "created_at": "2026-03-22T17:41:42.817039+00:00",
+      "festival": "Eid",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "e3976058c61f44d8b128cb38d9692f47",
+      "location": "gurugram",
+      "offer": "20% OFF",
+      "poster_url": "http://localhost:5000/poster/poster_a668158cfbee4c04bd9237877a6f1206.png",
+      "product": "Premium Rice",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
+    "9": {
+      "business": "sneha",
+      "caption": "sneha is offering 30% off on phone this Diwali in Delhi! Don\u2019t miss out.",
+      "created_at": "2026-03-22T17:44:30.062400+00:00",
+      "festival": "Diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "09bc2ab9d57a4faba073db856309de1f",
+      "location": "Delhi",
+      "offer": "30% off",
+      "poster_url": "http://localhost:5000/poster/poster_15f3149f27f248759982cdb107a592bd.png",
+      "product": "phone",
+      "status": "generated",
+      "user_id": "3039312a626b4e4c844e549000a38d00"
+    }
+  },
+  "users": {
+    "1": {
+      "created_at": "2026-03-22T15:00:09.911806+00:00",
+      "email": "vivek@test.com",
+      "id": "12cd9a28345141d193fe31170fa9ff13",
+      "name": "Vivek",
+      "password": "$2b$12$Z2oWvtJv54MgbImiBfBGAOh4KF.MfOIKigTF1UKPI8Pd1CjmyzYsi",
+      "provider": "email"
+    },
+    "2": {
+      "created_at": "2026-03-22T15:34:51.885763+00:00",
+      "email": "vivekbiswal2006@gmail.com",
+      "id": "03c8f7b09d144549944932287c4ca324",
+      "name": "vivek biswal",
+      "password": "$2b$12$FEfMgG.YDs5OmhdRp4QHr.igwkHNSZzi9jpH80G1pTbHlX98DS0TK",
+      "provider": "email"
+    },
+    "3": {
+      "created_at": "2026-03-22T17:43:49.453795+00:00",
+      "email": "vivekbiswal14@gmail.com",
+      "id": "3039312a626b4e4c844e549000a38d00",
+      "name": "vivekbiswal14@gmail.com",
+      "password": "$2b$12$ZRTrl24h64.gtj4uh8BkXujQQlDV81PaFt7MErx6hNM/RE547JPXG",
+      "provider": "email"
+    }
+  }
+}

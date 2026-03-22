@@ -7,7 +7,7 @@ Campaign routes (all require a valid JWT token):
   GET  /campaign/<id>         - Get a single campaign by ID
 """
 
-
+import os
 import uuid
 from datetime import datetime, timezone
 

@@ -11,7 +11,6 @@ from models.db import init_db
 # Load env
 load_dotenv()
 
-
 # Routes
 from routes.auth import auth_bp
 from routes.campaign import campaign_bp
@@ -29,17 +28,17 @@ def create_app():
 
     # Extensions
     CORS(app)
-    jwt = JWTManager(app)
+    JWTManager(app)
 
     # Logging
     @app.before_request
     def log_request():
         print(f"{request.method} {request.path}")
 
-    # Blueprints
-    app.register_blueprint(auth_bp, url_prefix="/api")
-    app.register_blueprint(campaign_bp, url_prefix="/api")
-    app.register_blueprint(ai_bp, url_prefix="/api")
+    # ✅ FIXED: Removed /api prefix
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(campaign_bp)
+    app.register_blueprint(ai_bp)
 
     # Health check
     @app.route("/")

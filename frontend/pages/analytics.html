@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Analytics | DesiGrowth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 transition-opacity duration-300 opacity-0"
+      onload="document.body.classList.remove('opacity-0')">
+
+<div class="max-w-6xl mx-auto p-6">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">📊 Analytics</h1>
+    <a href="/frontend/pages/dashboard.html"
+       class="text-gray-500 text-sm">← Back</a>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="grid md:grid-cols-3 gap-6 mb-8">
+
+    <div class="bg-white p-5 rounded-xl shadow">
+      <p class="text-gray-500 text-sm">Total Views</p>
+      <h2 id="views" class="text-2xl font-bold">0</h2>
+    </div>
+
+    <div class="bg-white p-5 rounded-xl shadow">
+      <p class="text-gray-500 text-sm">Total Clicks</p>
+      <h2 id="clicks" class="text-2xl font-bold">0</h2>
+    </div>
+
+    <div class="bg-white p-5 rounded-xl shadow">
+      <p class="text-gray-500 text-sm">Engagement Rate</p>
+      <h2 id="engagement" class="text-2xl font-bold">0%</h2>
+    </div>
+
+  </div>
+
+  <!-- Campaign List -->
+  <div class="bg-white p-6 rounded-xl shadow">
+    <h2 class="font-bold mb-4">📦 Campaign Performance</h2>
+    <div id="campaignTable"></div>
+  </div>
+
+</div>
+
+<!-- ✅ FIXED PATHS -->
+<script src="/frontend/scripts/auth.js"></script>
+<script src="/frontend/scripts/api.js"></script>
+
+<script>
+requireAuth();
+
+async function loadAnalytics() {
+  const res = await api.getCampaigns();
+  const campaigns = res.campaigns;
+
+  let totalViews = 0;
+  let totalClicks = 0;
+
+  const table = document.getElementById("campaignTable");
+  table.innerHTML = "";
+
+  // EMPTY STATE
+  if (!campaigns.length) {
+    table.innerHTML = `
+      <p class="text-gray-500 text-sm">
+        No campaign data available
+      </p>
+    `;
+    return;
+  }
+
+  campaigns.forEach(c => {
+    // Fake realistic metrics
+    const views = Math.floor(Math.random() * 1000) + 200;
+    const clicks = Math.floor(views * 0.2);
+
+    totalViews += views;
+    totalClicks += clicks;
+
+    table.innerHTML += `
+      <div class="border-b py-3 flex justify-between">
+        <span class="font-medium">${c.product}</span>
+        <span class="text-sm text-gray-500">
+          ${views} views / ${clicks} clicks
+        </span>
+      </div>
+    `;
+  });
+
+  const engagement = totalViews
+    ? ((totalClicks / totalViews) * 100).toFixed(1)
+    : 0;
+
+  document.getElementById("views").textContent = totalViews;
+  document.getElementById("clicks").textContent = totalClicks;
+  document.getElementById("engagement").textContent = engagement + "%";
+}
+
+loadAnalytics();
+</script>
+
+</body>
+</html>

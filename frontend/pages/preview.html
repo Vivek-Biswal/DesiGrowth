@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Preview Campaign | DesiGrowth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 transition-opacity duration-300 opacity-0"
+      onload="document.body.classList.remove('opacity-0')">
+
+<div class="max-w-3xl mx-auto p-6">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">👀 Campaign Preview</h1>
+    <a href="/frontend/pages/builder.html"
+       class="text-gray-500 text-sm">← Back</a>
+  </div>
+
+  <!-- Card -->
+  <div id="previewCard" class="bg-white p-6 rounded-xl shadow"></div>
+
+  <!-- Actions -->
+  <div class="mt-6 flex gap-4">
+    <button onclick="goToDashboard()"
+      class="flex-1 bg-green-500 text-white py-3 rounded-lg font-semibold">
+      ✅ Save & Go to Dashboard
+    </button>
+
+    <button onclick="editCampaign()"
+      class="flex-1 bg-gray-200 py-3 rounded-lg">
+      ✏️ Edit
+    </button>
+  </div>
+
+</div>
+
+<!-- ✅ FIXED PATHS -->
+<script src="/frontend/scripts/auth.js"></script>
+
+<script>
+requireAuth();
+
+// Get latest campaign
+const data = JSON.parse(localStorage.getItem("latest_campaign"));
+
+const container = document.getElementById("previewCard");
+
+if (!data) {
+  container.innerHTML = `
+    <p class="text-gray-500">No campaign found</p>
+  `;
+} else {
+  container.innerHTML = `
+    <h2 class="text-xl font-bold mb-2">${data.product}</h2>
+    <p class="text-gray-500 mb-2">${data.offer}</p>
+
+    <p class="mb-4">${data.caption}</p>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+      ${data.hashtags.map(tag =>
+        `<span class="text-sm bg-gray-100 px-2 py-1 rounded">${tag}</span>`
+      ).join("")}
+    </div>
+
+    ${data.poster_url ? `<img src="${data.poster_url}" class="rounded-lg"/>` : ""}
+  `;
+}
+
+// Navigation
+function goToDashboard() {
+  window.location.href = "/frontend/pages/dashboard.html";
+}
+
+function editCampaign() {
+  window.location.href = "/frontend/pages/builder.html";
+}
+</script>
+
+</body>
+</html>
