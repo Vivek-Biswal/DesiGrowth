@@ -40,6 +40,66 @@
       "status": "generated",
       "user_id": "3039312a626b4e4c844e549000a38d00"
     },
+    "11": {
+      "business": "ashwin",
+      "caption": "ashwin is offering 69% on Shoes this diwali in delhi! Don\u2019t miss out.",
+      "created_at": "2026-03-22T19:14:06.296063+00:00",
+      "festival": "diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "e3fd1591ef5345929c667be3265fdb90",
+      "location": "delhi",
+      "offer": "69%",
+      "poster_url": "http://localhost:5000/poster/poster_31a8726402ff44fc9fb98da2eaaf922e.png",
+      "product": "Shoes",
+      "status": "generated",
+      "user_id": "3039312a626b4e4c844e549000a38d00"
+    },
+    "12": {
+      "business": "vivek",
+      "caption": "vivek is offering 10% on Premium Rice this diwali in goa! Don\u2019t miss out.",
+      "created_at": "2026-03-23T17:00:59.033079+00:00",
+      "festival": "diwali",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "11da757a5e72450c92810e4486c0368a",
+      "location": "goa",
+      "offer": "10%",
+      "poster_url": "http://localhost:5000/poster/poster_72e376305c08420f91d153e384f92be5.png",
+      "product": "Premium Rice",
+      "status": "generated",
+      "user_id": "fa86c8b488394b82a41b50a57f341d35"
+    },
+    "13": {
+      "business": "vivek",
+      "caption": "vivek is offering 30% off on apple! Don\u2019t miss out.",
+      "created_at": "2026-03-23T17:02:15.526613+00:00",
+      "festival": "",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "91a975f7069445b3b7b1f14d4f836d50",
+      "location": "",
+      "offer": "30% off",
+      "poster_url": "http://localhost:5000/poster/poster_dc6fbdf4a5ba4a60a4a5c1cab5b712db.png",
+      "product": "apple",
+      "status": "generated",
+      "user_id": "fa86c8b488394b82a41b50a57f341d35"
+    },
     "2": {
       "business": "Vivek Store",
       "caption": "Vivek Store is offering 50% OFF on Shoes this Diwali in Delhi! Don\u2019t miss out.",
@@ -224,6 +284,14 @@
       "id": "3039312a626b4e4c844e549000a38d00",
       "name": "vivekbiswal14@gmail.com",
       "password": "$2b$12$ZRTrl24h64.gtj4uh8BkXujQQlDV81PaFt7MErx6hNM/RE547JPXG",
+      "provider": "email"
+    },
+    "4": {
+      "created_at": "2026-03-23T15:43:35.860492+00:00",
+      "email": "opman8260@gmail.com",
+      "id": "fa86c8b488394b82a41b50a57f341d35",
+      "name": "vivek",
+      "password": "$2b$12$Up5CJtNZYrlp/83H.Ll3XOEMzsskA8n2zFQqydbGvYTAV6/EzBXoq",
       "provider": "email"
     }
   }

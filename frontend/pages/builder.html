@@ -3,97 +3,200 @@
 <head>
   <meta charset="UTF-8">
   <title>Create Campaign | DesiGrowth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Inter', sans-serif; }</style>
 </head>
+<body class="bg-[#f8fafc] antialiased">
 
-<body class="bg-gray-50 transition-opacity duration-300 opacity-0"
-      onload="document.body.classList.remove('opacity-0')">
+  <div id="mobileNav"></div>
+  <div id="sidebar"></div>
 
-<div class="max-w-3xl mx-auto p-6">
+  <main class="lg:pl-64 min-h-screen pt-14 pb-24 lg:pt-0 lg:pb-0">
+    <div class="max-w-2xl mx-auto p-6 lg:p-8">
 
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">✨ Create Campaign</h1>
-    <a href="/frontend/pages/dashboard.html"
-       class="text-gray-500 text-sm">← Back</a>
-  </div>
+      <!-- Page Header -->
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">Create Campaign</h1>
+        <p class="text-sm text-gray-500 mt-1">Fill in your details and let AI generate a complete campaign</p>
+      </div>
 
-  <!-- Form -->
-  <div class="bg-white p-6 rounded-xl shadow space-y-4">
+      <!-- Form Card -->
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
 
-    <input id="business" placeholder="Business Name"
-      class="w-full border p-3 rounded-lg">
+        <!-- Section 1: Required -->
+        <div class="p-6 border-b border-gray-50">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0">1</div>
+            <h2 class="font-semibold text-gray-900">Campaign Details</h2>
+            <span class="text-xs text-red-400 ml-auto">* Required</span>
+          </div>
 
-    <input id="product" placeholder="Product Name"
-      class="w-full border p-3 rounded-lg">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                Business Name <span class="text-red-400">*</span>
+              </label>
+              <input id="business" type="text" placeholder="e.g. Sharma Grocery"
+                autocomplete="organization"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900
+                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                       focus:border-transparent transition-all">
+            </div>
 
-    <input id="offer" placeholder="Offer (e.g. 50% OFF)"
-      class="w-full border p-3 rounded-lg">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                Product / Service <span class="text-red-400">*</span>
+              </label>
+              <input id="product" type="text" placeholder="e.g. Premium Basmati Rice"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900
+                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                       focus:border-transparent transition-all">
+            </div>
 
-    <input id="festival" placeholder="Festival (optional)"
-      class="w-full border p-3 rounded-lg">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                Offer / Discount <span class="text-red-400">*</span>
+              </label>
+              <input id="offer" type="text" placeholder="e.g. 50% OFF, Buy 1 Get 1 Free"
+                maxlength="60"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900
+                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                       focus:border-transparent transition-all">
+              <p class="text-xs text-gray-400 mt-1.5 text-right">
+                <span id="offerCount">0</span>/60 characters
+              </p>
+            </div>
+          </div>
+        </div>
 
-    <input id="location" placeholder="Location (optional)"
-      class="w-full border p-3 rounded-lg">
+        <!-- Section 2: Optional -->
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-7 h-7 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 text-xs font-bold shrink-0">2</div>
+            <h2 class="font-semibold text-gray-900">Optional Details</h2>
+            <span class="text-xs text-gray-400 ml-auto">Improves AI output quality</span>
+          </div>
 
-    <p id="error" class="text-red-500 text-sm hidden"></p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Festival / Occasion</label>
+              <input id="festival" type="text" placeholder="e.g. Diwali, New Year"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900
+                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                       focus:border-transparent transition-all">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Location</label>
+              <input id="location" type="text" placeholder="e.g. Delhi, Mumbai"
+                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900
+                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                       focus:border-transparent transition-all">
+            </div>
+          </div>
+        </div>
 
-    <button onclick="createCampaign()"
-      class="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold">
-      Generate Campaign 🚀
-    </button>
+        <!-- Error -->
+        <div class="px-6 pb-2">
+          <div id="error" class="hidden flex items-start gap-2 text-red-600 text-sm
+                                  bg-red-50 border border-red-100 px-4 py-3 rounded-xl">
+            <svg class="w-4 h-4 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span id="errorText"></span>
+          </div>
+        </div>
 
-  </div>
+        <!-- Submit -->
+        <div class="p-6 pt-4">
+          <button id="generateBtn" onclick="createCampaign()"
+            class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5
+                   rounded-xl text-sm transition-all duration-200 flex items-center justify-center
+                   gap-2 shadow-sm hover:shadow-md shadow-orange-200
+                   disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Generate Campaign with AI
+          </button>
+          <p class="text-xs text-gray-400 text-center mt-3">Powered by AI · Usually takes 2–5 seconds</p>
+        </div>
 
-</div>
+      </div>
+    </div>
+  </main>
 
-<!-- ✅ FIXED PATHS -->
-<script src="/frontend/scripts/auth.js"></script>
-<script src="/frontend/scripts/api.js"></script>
-<script src="/frontend/scripts/app.js"></script>
+  <script src="/frontend/scripts/auth.js"></script>
+  <script src="/frontend/scripts/api.js"></script>
+  <script src="/frontend/scripts/app.js"></script>
 
-<script>
-requireAuth();
+  <script>
+    requireAuth();
+    renderSidebar('builder');
 
-async function createCampaign() {
-  const errorEl = document.getElementById('error');
-  errorEl.classList.add('hidden');
+    // Character counter
+    document.getElementById('offer').addEventListener('input', function () {
+      document.getElementById('offerCount').textContent = this.value.length;
+    });
 
-  const data = {
-    business: document.getElementById('business').value,
-    product: document.getElementById('product').value,
-    offer: document.getElementById('offer').value,
-    festival: document.getElementById('festival').value,
-    location: document.getElementById('location').value
-  };
+    // Clear error on any input
+    ['business', 'product', 'offer', 'festival', 'location'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        document.getElementById('error').classList.add('hidden');
+      });
+    });
 
-  // Basic validation
-  if (!data.business || !data.product || !data.offer) {
-    errorEl.textContent = "Please fill all required fields";
-    errorEl.classList.remove('hidden');
-    return;
-  }
+    async function createCampaign() {
+      const errorEl  = document.getElementById('error');
+      const errorTxt = document.getElementById('errorText');
+      const btn      = document.getElementById('generateBtn');
 
-  showLoading();
+      errorEl.classList.add('hidden');
 
-  try {
-    const res = await api.createCampaign(data);
+      const data = {
+        business: document.getElementById('business').value.trim(),
+        product:  document.getElementById('product').value.trim(),
+        offer:    document.getElementById('offer').value.trim(),
+        festival: document.getElementById('festival').value.trim(),
+        location: document.getElementById('location').value.trim(),
+      };
 
-    hideLoading();
+      if (!data.business || !data.product || !data.offer) {
+        errorTxt.textContent = 'Please fill in all required fields: Business Name, Product, and Offer.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
 
-    // Save for preview page
-    localStorage.setItem("latest_campaign", JSON.stringify(res.campaign));
+      // Button loading state
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Generating…`;
 
-    // Redirect
-    window.location.href = "/frontend/pages/preview.html";
+      showLoading('AI is crafting your campaign...');
 
-  } catch (err) {
-    hideLoading();
-    errorEl.textContent = err.message;
-    errorEl.classList.remove('hidden');
-  }
-}
-</script>
+      try {
+        const res = await api.createCampaign(data);
+        hideLoading();
+        localStorage.setItem('latest_campaign', JSON.stringify(res.campaign));
+        window.location.href = '/frontend/pages/preview.html';
+      } catch (err) {
+        hideLoading();
+        errorTxt.textContent = err.message || 'Something went wrong. Please try again.';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          Generate Campaign with AI`;
+      }
+    }
+  </script>
 
 </body>
 </html>

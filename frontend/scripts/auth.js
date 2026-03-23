@@ -1,5 +1,5 @@
 // ================================
-// Auth Module
+// DesiGrowth — Auth Module
 // ================================
 
 const DG_TOKEN_KEY = 'dg_token';
@@ -24,20 +24,17 @@ function clearAuth() {
   localStorage.removeItem(DG_USER_KEY);
 }
 
-// ✅ FIXED LOGOUT
 function logout() {
   clearAuth();
-  window.location.href = "/frontend/pages/login.html";
+  window.location.href = '/frontend/pages/login.html';
 }
 
-// ✅ FIXED AUTH CHECK
 function requireAuth() {
   if (!getToken()) {
-    window.location.href = "/frontend/pages/login.html";
+    window.location.href = '/frontend/pages/login.html';
   }
 }
 
-// Helpers
 function getUserDisplayName() {
   const u = getUser();
   return u ? (u.name || u.email || 'User') : 'User';

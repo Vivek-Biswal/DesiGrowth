@@ -4,178 +4,290 @@
   <meta charset="UTF-8">
   <title>DesiGrowth — AI Marketing for Local Businesses</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
+    .gradient-text {
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-8px); }
+    }
+    .float { animation: float 4s ease-in-out infinite; }
   </style>
 </head>
+<body class="bg-white text-gray-900 antialiased">
 
-<body class="bg-gray-50 transition-opacity duration-300 opacity-0"
-      onload="document.body.classList.remove('opacity-0')">
-
-<!-- ================= NAVBAR ================= -->
-<nav class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-
-    <h1 class="text-xl font-extrabold text-orange-500">🌱 DesiGrowth</h1>
-
-    <div class="flex items-center gap-4">
-      <a href="./pages/login.html" class="text-gray-600 hover:text-black text-sm">Login</a>
+<!-- ═══ NAVBAR ═══ -->
+<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2.5">
+      <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-sm">
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+        </svg>
+      </div>
+      <span class="font-bold text-lg text-gray-900">DesiGrowth</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#features" class="text-sm text-gray-500 hover:text-gray-900 transition-colors">Features</a>
+      <a href="#how"      class="text-sm text-gray-500 hover:text-gray-900 transition-colors">How it works</a>
+    </div>
+    <div class="flex items-center gap-3">
       <a href="./pages/login.html"
-         class="bg-orange-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-600">
-        Get Started
+        class="text-sm font-medium text-gray-700 hover:text-gray-900 px-4 py-2 rounded-xl hover:bg-gray-100 transition-all duration-150">
+        Log in
+      </a>
+      <a href="./pages/login.html"
+        class="text-sm font-semibold bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl
+               transition-all duration-200 shadow-sm hover:shadow-md shadow-orange-200">
+        Start Free →
       </a>
     </div>
-
   </div>
 </nav>
 
-<!-- ================= HERO ================= -->
-<section class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
+<!-- ═══ HERO ═══ -->
+<section class="max-w-7xl mx-auto px-6 pt-20 pb-28">
+  <div class="grid lg:grid-cols-2 gap-16 items-center">
 
-  <!-- Left -->
-  <div>
-    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
-      AI Marketing Platform  
-      <br>for <span class="text-orange-500">Small Businesses</span>
-    </h2>
+    <!-- Left -->
+    <div>
+      <div class="inline-flex items-center gap-2 bg-orange-50 border border-orange-100 text-orange-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-7">
+        <span class="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></span>
+        AI-Powered Marketing Platform
+      </div>
 
-    <p class="text-gray-600 text-lg mb-8">
-      Create ads, captions, posters, and campaigns in seconds.
-      No marketing skills needed. Just type and grow 🚀
-    </p>
+      <h1 class="text-5xl lg:text-[56px] font-black text-gray-900 leading-[1.06] tracking-tight mb-6">
+        Grow Your<br>
+        <span class="gradient-text">Local Business</span><br>
+        with AI
+      </h1>
 
-    <div class="flex gap-4">
-      <a href="./pages/login.html"
-         class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600">
-        Start Free →
-      </a>
-
-      <a href="./pages/dashboard.html"
-         class="border px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
-        View Demo
-      </a>
-    </div>
-
-    <p class="text-sm text-gray-400 mt-4">
-      Trusted by local shops, startups & creators
-    </p>
-  </div>
-
-  <!-- Right -->
-  <div class="bg-white p-6 rounded-xl shadow-xl">
-
-    <h3 class="font-semibold text-lg mb-4">✨ Example Campaign</h3>
-
-    <div class="bg-gray-50 p-4 rounded-lg mb-4">
-      <p class="text-gray-700 mb-2">
-        🎉 Diwali Sale! Get 50% OFF on Shoes at Vivek Store.
+      <p class="text-lg text-gray-500 leading-relaxed mb-9 max-w-md">
+        Create ads, captions, and full campaigns in seconds.
+        No marketing expertise needed — just type and grow.
       </p>
 
-      <div class="text-sm text-gray-500">
-        #sale #discount #fashion #diwali
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="./pages/login.html"
+          class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold
+                 px-6 py-3.5 rounded-xl text-sm transition-all duration-200
+                 shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-200">
+          Start for Free
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+        <a href="./pages/dashboard.html"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-gray-900
+                 border border-gray-200 hover:border-gray-300 px-5 py-3.5 rounded-xl hover:bg-gray-50 transition-all duration-200">
+          View Demo
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-4 mt-10">
+        <div class="flex -space-x-2">
+          <div class="w-8 h-8 rounded-full bg-orange-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">R</div>
+          <div class="w-8 h-8 rounded-full bg-blue-400  border-2 border-white flex items-center justify-center text-xs font-bold text-white">S</div>
+          <div class="w-8 h-8 rounded-full bg-green-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">P</div>
+          <div class="w-8 h-8 rounded-full bg-purple-400 border-2 border-white flex items-center justify-center text-xs font-bold text-white">A</div>
+          <div class="w-8 h-8 rounded-full bg-gray-200  border-2 border-white flex items-center justify-center text-xs font-bold text-gray-500">+</div>
+        </div>
+        <p class="text-sm text-gray-500">
+          <span class="font-semibold text-gray-900">500+</span> local businesses growing with DesiGrowth
+        </p>
       </div>
     </div>
 
-    <button class="w-full bg-green-500 text-white py-2 rounded-lg">
-      Poster Generated ✅
-    </button>
+    <!-- Right: Floating demo card -->
+    <div class="float">
+      <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 max-w-sm mx-auto">
+
+        <!-- Post header -->
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center font-bold text-orange-600 text-sm">S</div>
+          <div>
+            <p class="text-sm font-semibold text-gray-900">Sharma Grocery</p>
+            <p class="text-xs text-gray-400">Sponsored · AI Generated</p>
+          </div>
+          <span class="ml-auto text-xs bg-green-50 text-green-600 font-medium px-2 py-0.5 rounded-full border border-green-100">Live</span>
+        </div>
+
+        <!-- Campaign card -->
+        <div class="bg-gradient-to-br from-orange-500 to-amber-400 rounded-2xl p-5 mb-4 text-white">
+          <p class="text-xs font-medium text-orange-100 mb-1">🎉 Diwali Special</p>
+          <p class="text-xl font-extrabold leading-tight">Premium Basmati Rice</p>
+          <p class="text-3xl font-black mt-1">20% OFF</p>
+          <p class="text-xs text-orange-100 mt-3">Limited time · Delhi stores</p>
+        </div>
+
+        <p class="text-sm text-gray-600 leading-relaxed mb-3">
+          Celebrate Diwali with the finest Basmati Rice! Sharma Grocery brings you 20% OFF. Visit us today 🙏
+        </p>
+
+        <div class="flex flex-wrap gap-1.5 mb-4">
+          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">#diwali</span>
+          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">#sale</span>
+          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">#delhi</span>
+          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">#discount</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div class="bg-gray-50 rounded-xl p-2.5 text-center">
+            <p class="text-base font-bold text-gray-900">1.2K</p>
+            <p class="text-[10px] text-gray-400">Reach</p>
+          </div>
+          <div class="bg-green-50 rounded-xl p-2.5 text-center">
+            <p class="text-base font-bold text-green-600">18%</p>
+            <p class="text-[10px] text-gray-400">Engagement</p>
+          </div>
+          <div class="bg-orange-50 rounded-xl p-2.5 text-center">
+            <p class="text-base font-bold text-orange-600">94</p>
+            <p class="text-[10px] text-gray-400">Clicks</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
-
 </section>
 
-<!-- ================= FEATURES ================= -->
-<section class="bg-white py-20">
-  <div class="max-w-7xl mx-auto px-6 text-center">
+<!-- ═══ TRUST STRIP ═══ -->
+<div class="border-y border-gray-100 bg-gray-50/60 py-5">
+  <div class="max-w-7xl mx-auto px-6 flex flex-wrap justify-center items-center gap-x-8 gap-y-2">
+    <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Trusted by</span>
+    <span class="text-sm font-semibold text-gray-500">Sharma Grocery</span>
+    <span class="text-gray-300">·</span>
+    <span class="text-sm font-semibold text-gray-500">City Electronics</span>
+    <span class="text-gray-300">·</span>
+    <span class="text-sm font-semibold text-gray-500">Fresh Mart</span>
+    <span class="text-gray-300">·</span>
+    <span class="text-sm font-semibold text-gray-500">KP Fabrics</span>
+    <span class="text-gray-300">·</span>
+    <span class="text-sm font-semibold text-gray-500">Sunrise Café</span>
+  </div>
+</div>
 
-    <h2 class="text-3xl font-bold mb-12">
-      Everything you need to grow your business
-    </h2>
+<!-- ═══ FEATURES ═══ -->
+<section id="features" class="py-24">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
+        Everything you need to grow
+      </h2>
+      <p class="text-gray-500 text-lg max-w-xl mx-auto">
+        One platform for AI content, poster generation, ad management, and analytics.
+      </p>
+    </div>
 
     <div class="grid md:grid-cols-3 gap-8">
-
-      <div class="p-6 rounded-xl shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">🤖 AI Content</h3>
-        <p class="text-gray-600 text-sm">
-          Generate captions, hashtags, and campaign ideas instantly.
-        </p>
+      <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-2"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">AI Content Generation</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Generate compelling captions, hashtags, and full campaign ideas tailored to your business — in seconds.</p>
       </div>
 
-      <div class="p-6 rounded-xl shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">🎨 Poster Generator</h3>
-        <p class="text-gray-600 text-sm">
-          Create professional posters automatically with one click.
-        </p>
+      <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Poster Generator</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Create professional marketing posters automatically. No design skills or expensive tools required.</p>
       </div>
 
-      <div class="p-6 rounded-xl shadow hover:shadow-lg transition">
-        <h3 class="text-lg font-semibold mb-2">📊 Analytics</h3>
-        <p class="text-gray-600 text-sm">
-          Track views, clicks, and engagement easily.
-        </p>
+      <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Campaign Analytics</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Track views, clicks, and engagement in one dashboard. Know what's working and optimize for results.</p>
       </div>
-
     </div>
-
   </div>
 </section>
 
-<!-- ================= HOW IT WORKS ================= -->
-<section class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-6 text-center">
-
-    <h2 class="text-3xl font-bold mb-12">How it works</h2>
-
+<!-- ═══ HOW IT WORKS ═══ -->
+<section id="how" class="bg-gray-50 py-24">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">How it works</h2>
+      <p class="text-gray-500 text-lg">Three steps to your next successful campaign</p>
+    </div>
     <div class="grid md:grid-cols-3 gap-8">
-
-      <div>
-        <div class="text-3xl mb-2">1️⃣</div>
-        <p class="font-semibold">Enter product details</p>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 shadow-sm flex items-center justify-center mx-auto mb-5">
+          <span class="text-2xl font-black text-orange-500">1</span>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Enter your details</h3>
+        <p class="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">Tell us your business, product, and offer. Takes under 30 seconds.</p>
       </div>
-
-      <div>
-        <div class="text-3xl mb-2">2️⃣</div>
-        <p class="font-semibold">AI generates campaign</p>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 shadow-sm flex items-center justify-center mx-auto mb-5">
+          <span class="text-2xl font-black text-orange-500">2</span>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">AI generates campaign</h3>
+        <p class="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">Our AI crafts a complete campaign: caption, hashtags, and a professional poster.</p>
       </div>
-
-      <div>
-        <div class="text-3xl mb-2">3️⃣</div>
-        <p class="font-semibold">Launch & track results</p>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 shadow-sm flex items-center justify-center mx-auto mb-5">
+          <span class="text-2xl font-black text-orange-500">3</span>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Launch & track results</h3>
+        <p class="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">Launch on Google & Meta Ads. Track views, clicks, and engagement from your dashboard.</p>
       </div>
-
     </div>
-
   </div>
 </section>
 
-<!-- ================= CTA ================= -->
-<section class="bg-orange-500 text-white py-16 text-center">
-
-  <h2 class="text-3xl font-bold mb-4">
-    Start growing your business today 🚀
-  </h2>
-
-  <a href="./pages/login.html"
-     class="bg-white text-orange-500 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
-    Get Started Free
-  </a>
-
+<!-- ═══ CTA BAND ═══ -->
+<section class="bg-gradient-to-br from-orange-500 to-orange-600 py-20 text-white">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <h2 class="text-3xl lg:text-4xl font-extrabold mb-4">Ready to grow your business?</h2>
+    <p class="text-orange-100 text-lg mb-9 max-w-lg mx-auto">
+      Join hundreds of local businesses already using DesiGrowth to reach more customers every day.
+    </p>
+    <a href="./pages/login.html"
+      class="inline-flex items-center gap-2 bg-white text-orange-600 font-bold
+             px-8 py-4 rounded-xl hover:bg-orange-50 transition-all duration-200 shadow-xl text-sm">
+      Get Started Free — No Card Needed
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+      </svg>
+    </a>
+  </div>
 </section>
 
-<!-- ================= FOOTER ================= -->
-<footer class="bg-gray-900 text-gray-400 text-center py-6">
-
-  <p class="text-sm">
-    © 2026 DesiGrowth — AI Powered Marketing Platform
-  </p>
-
+<!-- ═══ FOOTER ═══ -->
+<footer class="bg-gray-900 text-gray-400 py-12">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <div class="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center">
+        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+        </svg>
+      </div>
+      <span class="font-bold text-white">DesiGrowth</span>
+      <span class="text-gray-600 text-sm">AI Marketing Platform</span>
+    </div>
+    <p class="text-sm text-gray-500">© 2026 DesiGrowth. All rights reserved.</p>
+  </div>
 </footer>
 
 </body>

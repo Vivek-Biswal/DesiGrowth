@@ -4,95 +4,333 @@
   <meta charset="UTF-8">
   <title>Login | DesiGrowth</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .spinner {
+      animation: spin 0.7s linear infinite;
+    }
+    .error-msg {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .error-msg.hidden {
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      display: none;
+    }
+    .error-msg:not(.hidden) {
+      opacity: 1;
+      transform: translateY(0);
+      display: flex;
+    }
+  </style>
 </head>
 
-<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+<body class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 flex items-center justify-center p-4">
 
-<div class="bg-white p-8 rounded-xl shadow w-full max-w-md">
+  <div class="w-full max-w-md">
 
-  <h1 class="text-2xl font-bold mb-6 text-center">🔐 Login</h1>
+    <!-- Brand -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-orange-500 shadow-lg shadow-orange-200 mb-4">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-900 tracking-tight">DesiGrowth</h1>
+      <p class="text-sm text-gray-500 mt-1">Your growth, your way</p>
+    </div>
 
-  <!-- Form -->
-  <form id="loginForm" class="space-y-4">
+    <!-- Card -->
+    <div class="bg-white rounded-2xl shadow-xl shadow-gray-100/80 border border-gray-100 px-8 py-8">
 
-    <input id="email" type="email" placeholder="Email"
-      class="w-full border p-3 rounded-lg" required>
+      <!-- ═══ LOGIN VIEW ═══ -->
+      <div id="loginView">
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold text-gray-900">Welcome back</h2>
+          <p class="text-sm text-gray-500 mt-0.5">Sign in to continue to your account</p>
+        </div>
 
-    <input id="password" type="password" placeholder="Password"
-      class="w-full border p-3 rounded-lg" required>
+        <form id="loginForm" class="space-y-4" novalidate>
 
-    <p id="error" class="text-red-500 text-sm hidden"></p>
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required
+              class="w-full border border-gray-200 bg-gray-50 px-4 py-3 rounded-xl text-sm text-gray-900
+                     placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                     focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed">
+          </div>
 
-    <button type="submit"
-      class="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold">
-      Login
-    </button>
+          <!-- Password -->
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+            <div class="relative">
+              <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required
+                class="w-full border border-gray-200 bg-gray-50 px-4 py-3 pr-12 rounded-xl text-sm text-gray-900
+                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                       focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed">
+              <button type="button" id="toggleLoginPw" aria-label="Toggle password visibility"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition p-0.5">
+                <!-- eye open -->
+                <svg id="eyeOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <!-- eye off -->
+                <svg id="eyeClosed" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                </svg>
+              </button>
+            </div>
+          </div>
 
-  </form>
+          <!-- Error -->
+          <p id="loginError"
+            class="error-msg hidden items-center gap-2 text-red-600 text-sm bg-red-50 border border-red-100 px-3 py-2.5 rounded-xl">
+            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span id="loginErrorText"></span>
+          </p>
 
-  <!-- Signup -->
-  <p class="text-center text-sm text-gray-500 mt-4">
-    Don't have an account?
-    <button onclick="signup()" class="text-orange-500 font-semibold">
-      Sign up
-    </button>
-  </p>
+          <!-- Submit -->
+          <button id="loginBtn" type="submit"
+            class="w-full bg-orange-500 hover:bg-orange-600 active:scale-[0.99] text-white py-3 rounded-xl
+                   font-semibold text-sm transition-all flex items-center justify-center gap-2
+                   disabled:opacity-60 disabled:cursor-not-allowed mt-1">
+            Sign in
+          </button>
 
-</div>
+        </form>
 
-<!-- ✅ FIXED PATHS -->
-<script src="/frontend/scripts/auth.js"></script>
-<script src="/frontend/scripts/api.js"></script>
+        <p class="text-center text-sm text-gray-500 mt-5">
+          Don't have an account?
+          <button id="goSignup" class="text-orange-500 font-semibold hover:text-orange-600 transition ml-1">
+            Sign up free
+          </button>
+        </p>
+      </div>
+      <!-- ═══ /LOGIN VIEW ═══ -->
 
-<script>
-// Already logged in → go dashboard
-if (getToken()) {
-  window.location.href = "/frontend/pages/dashboard.html";
-}
+      <!-- ═══ SIGNUP VIEW ═══ -->
+      <div id="signupView" class="hidden">
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold text-gray-900">Create an account</h2>
+          <p class="text-sm text-gray-500 mt-0.5">Start your growth journey today</p>
+        </div>
 
-// Login
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+        <form id="signupForm" class="space-y-4" novalidate>
 
-  const errorEl = document.getElementById("error");
-  errorEl.classList.add("hidden");
+          <!-- Name -->
+          <div>
+            <label for="signupName" class="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+            <input id="signupName" type="text" placeholder="Jane Doe" autocomplete="name" required
+              class="w-full border border-gray-200 bg-gray-50 px-4 py-3 rounded-xl text-sm text-gray-900
+                     placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                     focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed">
+          </div>
 
-  try {
-    const res = await api.login(
-      document.getElementById("email").value,
-      document.getElementById("password").value
-    );
+          <!-- Email -->
+          <div>
+            <label for="signupEmail" class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+            <input id="signupEmail" type="email" placeholder="you@example.com" autocomplete="email" required
+              class="w-full border border-gray-200 bg-gray-50 px-4 py-3 rounded-xl text-sm text-gray-900
+                     placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                     focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed">
+          </div>
 
-    setAuth(res.token, res.user);
+          <!-- Password -->
+          <div>
+            <label for="signupPassword" class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+            <div class="relative">
+              <input id="signupPassword" type="password" placeholder="••••••••" autocomplete="new-password" required
+                class="w-full border border-gray-200 bg-gray-50 px-4 py-3 pr-12 rounded-xl text-sm text-gray-900
+                       placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
+                       focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed">
+              <button type="button" id="toggleSignupPw" aria-label="Toggle password visibility"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition p-0.5">
+                <svg id="eyeOpenSignup" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <svg id="eyeClosedSignup" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                </svg>
+              </button>
+            </div>
+          </div>
 
-    // ✅ redirect
-    window.location.href = "/frontend/pages/dashboard.html";
+          <!-- Error -->
+          <p id="signupError"
+            class="error-msg hidden items-center gap-2 text-red-600 text-sm bg-red-50 border border-red-100 px-3 py-2.5 rounded-xl">
+            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span id="signupErrorText"></span>
+          </p>
 
-  } catch (err) {
-    errorEl.textContent = err.message;
-    errorEl.classList.remove("hidden");
-  }
-});
+          <!-- Submit -->
+          <button id="signupBtn" type="submit"
+            class="w-full bg-orange-500 hover:bg-orange-600 active:scale-[0.99] text-white py-3 rounded-xl
+                   font-semibold text-sm transition-all flex items-center justify-center gap-2
+                   disabled:opacity-60 disabled:cursor-not-allowed mt-1">
+            Create Account
+          </button>
 
-// Simple signup (quick hackathon version)
-async function signup() {
-  const name = prompt("Enter your name");
-  const email = prompt("Enter email");
-  const password = prompt("Enter password");
+        </form>
 
-  if (!name || !email || !password) return;
+        <p class="text-center text-sm text-gray-500 mt-5">
+          Already have an account?
+          <button id="goLogin" class="text-orange-500 font-semibold hover:text-orange-600 transition ml-1">
+            Sign in
+          </button>
+        </p>
+      </div>
+      <!-- ═══ /SIGNUP VIEW ═══ -->
 
-  try {
-    const res = await api.signup(name, email, password);
-    setAuth(res.token, res.user);
-    window.location.href = "/frontend/pages/dashboard.html";
-  } catch (err) {
-    alert(err.message);
-  }
-}
-</script>
+    </div><!-- /card -->
+
+    <p class="text-center text-xs text-gray-400 mt-6">&copy; 2025 DesiGrowth. All rights reserved.</p>
+
+  </div>
+
+  <!-- ✅ DO NOT CHANGE PATHS -->
+  <script src="/frontend/scripts/auth.js"></script>
+  <script src="/frontend/scripts/api.js"></script>
+
+  <script>
+    // ── Already logged in → skip to dashboard ────────────────────────────────
+    if (typeof getToken === 'function' && getToken()) {
+      window.location.href = '/frontend/pages/dashboard.html';
+    }
+
+    // ── Spinner HTML helper ───────────────────────────────────────────────────
+    function spinnerHTML(label) {
+      return `<svg class="spinner w-4 h-4" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>${label}`;
+    }
+
+    // ── Error helpers ─────────────────────────────────────────────────────────
+    function showError(msgEl, textEl, msg) {
+      textEl.textContent = msg;
+      msgEl.classList.remove('hidden');
+    }
+    function hideError(msgEl, textEl) {
+      msgEl.classList.add('hidden');
+      textEl.textContent = '';
+    }
+
+    // ── Password visibility toggle ────────────────────────────────────────────
+    function bindPasswordToggle(inputId, btnId, eyeOpenId, eyeClosedId) {
+      document.getElementById(btnId).addEventListener('click', () => {
+        const input     = document.getElementById(inputId);
+        const isHidden  = input.type === 'password';
+        input.type      = isHidden ? 'text' : 'password';
+        document.getElementById(eyeOpenId).classList.toggle('hidden', isHidden);
+        document.getElementById(eyeClosedId).classList.toggle('hidden', !isHidden);
+      });
+    }
+    bindPasswordToggle('password',       'toggleLoginPw',  'eyeOpen',       'eyeClosed');
+    bindPasswordToggle('signupPassword', 'toggleSignupPw', 'eyeOpenSignup', 'eyeClosedSignup');
+
+    // ── View toggle ───────────────────────────────────────────────────────────
+    document.getElementById('goSignup').addEventListener('click', () => {
+      document.getElementById('loginView').classList.add('hidden');
+      document.getElementById('signupView').classList.remove('hidden');
+    });
+    document.getElementById('goLogin').addEventListener('click', () => {
+      document.getElementById('signupView').classList.add('hidden');
+      document.getElementById('loginView').classList.remove('hidden');
+    });
+
+    // ── Auto-clear errors on input ────────────────────────────────────────────
+    ['email', 'password'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () =>
+        hideError(
+          document.getElementById('loginError'),
+          document.getElementById('loginErrorText')
+        ));
+    });
+    ['signupName', 'signupEmail', 'signupPassword'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () =>
+        hideError(
+          document.getElementById('signupError'),
+          document.getElementById('signupErrorText')
+        ));
+    });
+
+    // ── Login ─────────────────────────────────────────────────────────────────
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn    = document.getElementById('loginBtn');
+      const errEl  = document.getElementById('loginError');
+      const errTxt = document.getElementById('loginErrorText');
+      const inputs = ['email', 'password'].map(id => document.getElementById(id));
+
+      hideError(errEl, errTxt);
+      btn.disabled = true;
+      btn.innerHTML = spinnerHTML('Signing in…');
+      inputs.forEach(el => el.disabled = true);
+
+      try {
+        const res = await api.login(
+          document.getElementById('email').value,
+          document.getElementById('password').value
+        );
+        setAuth(res.token, res.user);
+        window.location.href = '/frontend/pages/dashboard.html';
+      } catch (err) {
+        showError(errEl, errTxt, err.message || 'Login failed. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = 'Sign in';
+        inputs.forEach(el => el.disabled = false);
+      }
+    });
+
+    // ── Signup ────────────────────────────────────────────────────────────────
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn    = document.getElementById('signupBtn');
+      const errEl  = document.getElementById('signupError');
+      const errTxt = document.getElementById('signupErrorText');
+      const inputs = ['signupName', 'signupEmail', 'signupPassword'].map(id => document.getElementById(id));
+
+      const name     = document.getElementById('signupName').value.trim();
+      const email    = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+
+      hideError(errEl, errTxt);
+      btn.disabled = true;
+      btn.innerHTML = spinnerHTML('Creating account…');
+      inputs.forEach(el => el.disabled = true);
+
+      try {
+        const res = await api.signup(name, email, password);
+        setAuth(res.token, res.user);
+        window.location.href = '/frontend/pages/dashboard.html';
+      } catch (err) {
+        showError(errEl, errTxt, err.message || 'Sign up failed. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = 'Create Account';
+        inputs.forEach(el => el.disabled = false);
+      }
+    });
+  </script>
 
 </body>
 </html>
