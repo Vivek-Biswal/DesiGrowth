@@ -4,12 +4,12 @@ from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 import os
 
+# Load env
+load_dotenv()
+
 # Config + DB
 from config import Config
 from models.db import init_db
-
-# Load env
-load_dotenv()
 
 # Routes
 from routes.auth import auth_bp
@@ -23,22 +23,32 @@ def create_app():
     # Load config
     app.config.from_object(Config)
 
-    # Init DB
+    # ✅ INIT DB
     init_db(app.config["DATABASE_PATH"])
 
-    # Extensions
-    CORS(app, origins=[
-    "http://localhost:5500",
-    "http://127.0.0.1:5500",
-    "https://desi-growth.vercel.app"])
-    JWTManager(app)
+    # ✅ 🔥 FIXED CORS (VERY IMPORTANT)
+    CORS(app, resources={
+        r"/*": {
+            "origins": [
+                "http://localhost:5500",
+                "http://127.0.0.1:5500",
+                "https://desi-growth.vercel.app"
+            ]
+        }
+    })
+
+    # Optional but helpful
+    app.config['CORS_HEADERS'] = 'Content-Type'
+
+    # JWT
+    jwt = JWTManager(app)
 
     # Logging
     @app.before_request
     def log_request():
         print(f"{request.method} {request.path}")
 
-    # ✅ FIXED: Removed /api prefix
+    # Blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(campaign_bp)
     app.register_blueprint(ai_bp)
@@ -65,6 +75,7 @@ def create_app():
         }), 500
 
     return app
+
 
 if __name__ == "__main__":
     app = create_app()
