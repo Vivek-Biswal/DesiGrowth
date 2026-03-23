@@ -100,6 +100,46 @@
       "status": "generated",
       "user_id": "fa86c8b488394b82a41b50a57f341d35"
     },
+    "14": {
+      "business": "vivek",
+      "caption": "vivek is offering Buy 1, Get 1 for Free!!! on headphone! Don\u2019t miss out.",
+      "created_at": "2026-03-23T17:41:44.214361+00:00",
+      "festival": "",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "cc5bd28a51b043be95c088feb6b52828",
+      "location": "",
+      "offer": "Buy 1, Get 1 for Free!!!",
+      "poster_url": "http://localhost:5000/poster/poster_fa8732aa5f544cf3b07b8d0d5ae82465.png",
+      "product": "headphone",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
+    "15": {
+      "business": "amol",
+      "caption": "amol is offering Buy 1, Get 1 for Free!!! on Shoes! Don\u2019t miss out.",
+      "created_at": "2026-03-23T17:42:10.583285+00:00",
+      "festival": "",
+      "hashtags": [
+        "#sale",
+        "#discount",
+        "#offer",
+        "#localbusiness",
+        "#smallbusiness"
+      ],
+      "id": "8b06ee50c9a44aca8992307ce914bb02",
+      "location": "",
+      "offer": "Buy 1, Get 1 for Free!!!",
+      "poster_url": "http://localhost:5000/poster/poster_ba99e41dab9c4dfbbfed3101e8c4f590.png",
+      "product": "Shoes",
+      "status": "generated",
+      "user_id": "03c8f7b09d144549944932287c4ca324"
+    },
     "2": {
       "business": "Vivek Store",
       "caption": "Vivek Store is offering 50% OFF on Shoes this Diwali in Delhi! Don\u2019t miss out.",
