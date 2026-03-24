@@ -32,7 +32,8 @@ def create_app():
             "origins": [
                 "http://localhost:5500",
                 "http://127.0.0.1:5500",
-                "https://desi-growth.vercel.app"
+                "https://desigrowth.vercel.app",   # your actual domain
+                "https://*.vercel.app"             # allow preview deployments
             ]
         }
     })
