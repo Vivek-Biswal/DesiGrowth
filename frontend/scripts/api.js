@@ -1,184 +1,111 @@
 // ============================================================
-// DesiGrowth — App Utilities (scripts/app.js)
-// Shared UI helpers used by all protected pages.
+// DesiGrowth API Layer
+// Handles all backend communication
 // ============================================================
 
-// ── SVG icons ────────────────────────────────────────────────
-const _ICONS = {
-  home:   `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`,
-  plus:   `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>`,
-  chart:  `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>`,
-  ads:    `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>`,
-  user:   `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>`,
-  logout: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>`,
+// 🔥 Dynamic API base (LOCAL + PRODUCTION)
+const API_BASE = window.location.hostname === "localhost"
+  ? "http://127.0.0.1:5000"
+  : "https://desigrowth-2.onrender.com";
+
+// ============================================================
+// Helper: Get Auth Token
+// ============================================================
+function getToken() {
+  return localStorage.getItem("token");
+}
+
+// ============================================================
+// Helper: Request Wrapper
+// ============================================================
+async function request(endpoint, options = {}) {
+  try {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(getToken() && { Authorization: `Bearer ${getToken()}` })
+      },
+      ...options
+    });
+
+    // 🔥 Handle non-JSON safely
+    const text = await res.text();
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error("Invalid server response");
+    }
+
+    if (!res.ok) {
+      throw new Error(data.error || "Request failed");
+    }
+
+    return data;
+
+  } catch (err) {
+    console.error("API ERROR:", err);
+    throw err;
+  }
+}
+
+// ============================================================
+// Auth APIs
+// ============================================================
+const api = {
+
+  async signup(name, email, password) {
+    return request("/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({ name, email, password })
+    });
+  },
+
+  async login(email, password) {
+    return request("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password })
+    });
+  },
+
+  async getUser() {
+    return request("/auth/user");
+  },
+
+  // ============================================================
+  // Campaign APIs
+  // ============================================================
+
+  async createCampaign(data) {
+    return request("/campaign/create", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+  },
+
+  async getCampaigns() {
+    return request("/campaign/all");
+  },
+
+  async getCampaign(id) {
+    return request(`/campaign/${id}`);
+  },
+
+  // ============================================================
+  // AI APIs
+  // ============================================================
+
+  async generateAI(data) {
+    return request("/ai/generate", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+  }
+
 };
 
-const _NAV = [
-  { id: 'dashboard', href: './dashboard.html',  icon: _ICONS.home,  label: 'Dashboard'       },
-  { id: 'builder',   href: './builder.html',     icon: _ICONS.plus,  label: 'Create Campaign' },
-  { id: 'analytics', href: './analytics.html',   icon: _ICONS.chart, label: 'Analytics'       },
-  { id: 'ads',       href: './ads.html',          icon: _ICONS.ads,   label: 'Ads Manager'     },
-  { id: 'profile',   href: './profile.html',      icon: _ICONS.user,  label: 'Profile'         },
-];
-
-// ── Sidebar renderer ─────────────────────────────────────────
-function renderSidebar(activePage) {
-  const name    = getUserDisplayName();
-  const initial = getUserInitial();
-
-  const linkHtml = _NAV.map(l => {
-    const active = l.id === activePage;
-    const cls = active
-      ? 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm bg-orange-50 text-orange-600 font-semibold'
-      : 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-150';
-    return `<a href="${l.href}" class="${cls}">${l.icon}<span>${l.label}</span></a>`;
-  }).join('');
-
-  const sidebarEl = document.getElementById('sidebar');
-  if (sidebarEl) {
-    sidebarEl.innerHTML = `
-      <aside class="hidden lg:flex flex-col w-64 bg-white border-r border-gray-100 fixed h-full z-20">
-        <div class="px-6 py-5 border-b border-gray-100">
-          <a href="../index.html" class="flex items-center gap-2.5">
-            <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center shadow-sm">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-              </svg>
-            </div>
-            <div>
-              <span class="text-base font-bold text-gray-900">DesiGrowth</span>
-              <p class="text-[10px] text-gray-400 leading-none mt-0.5">AI Marketing Platform</p>
-            </div>
-          </a>
-        </div>
-        <nav class="flex-1 p-4 space-y-0.5 overflow-y-auto">${linkHtml}</nav>
-        <div class="p-4 border-t border-gray-100">
-          <div class="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-gray-50 transition-all duration-150">
-            <div class="w-9 h-9 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
-              <span class="text-white font-bold text-sm">${initial}</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-gray-900 truncate">${name}</p>
-              <p class="text-xs text-gray-400">Free Plan</p>
-            </div>
-            <button onclick="logout()" title="Logout"
-              class="text-gray-400 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50">
-              ${_ICONS.logout}
-            </button>
-          </div>
-        </div>
-      </aside>`;
-  }
-
-  const mobileNavEl = document.getElementById('mobileNav');
-  if (mobileNavEl) {
-    const mobileLinks = _NAV.map(l => {
-      const active = l.id === activePage;
-      const cls = active
-        ? 'flex-1 py-2 flex flex-col items-center gap-0.5 text-[10px] text-orange-500 font-semibold'
-        : 'flex-1 py-2 flex flex-col items-center gap-0.5 text-[10px] text-gray-400 hover:text-gray-600 transition-colors';
-      return `<a href="${l.href}" class="${cls}">${l.icon}<span>${l.label.split(' ')[0]}</span></a>`;
-    }).join('');
-
-    mobileNavEl.innerHTML = `
-      <nav class="lg:hidden fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md border-b border-gray-100 z-20 px-4 py-3 flex items-center justify-between shadow-sm">
-        <a href="../index.html" class="flex items-center gap-2">
-          <div class="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center">
-            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-            </svg>
-          </div>
-          <span class="font-bold text-gray-900 text-sm">DesiGrowth</span>
-        </a>
-        <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-          <span class="text-white font-bold text-xs">${initial}</span>
-        </div>
-      </nav>
-      <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-100 z-20 flex shadow-lg">
-        ${mobileLinks}
-      </nav>`;
-  }
-}
-
-// ── Toast notification ────────────────────────────────────────
-function showToast(message, type = 'success') {
-  const styles = {
-    success: 'bg-gray-900 text-white',
-    error:   'bg-red-500 text-white',
-    info:    'bg-blue-500 text-white',
-    warning: 'bg-amber-500 text-white',
-  };
-  const icons = {
-    success: `<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`,
-    error:   `<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>`,
-    info:    `<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
-    warning: `<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`,
-  };
-
-  const toast = document.createElement('div');
-  toast.className = [
-    'fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-[100]',
-    styles[type] || styles.success,
-    'pl-3 pr-4 py-3 rounded-xl shadow-2xl text-sm font-medium',
-    'flex items-center gap-2.5 max-w-xs',
-    'translate-y-4 opacity-0 transition-all duration-300',
-  ].join(' ');
-  toast.innerHTML = `${icons[type] || icons.success}${message}`;
-  document.body.appendChild(toast);
-
-  // Animate in
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    toast.classList.remove('translate-y-4', 'opacity-0');
-    toast.classList.add('translate-y-0', 'opacity-100');
-  }));
-
-  // Animate out
-  setTimeout(() => {
-    toast.classList.add('opacity-0', 'translate-y-4');
-    setTimeout(() => toast.remove(), 300);
-  }, 3500);
-}
-
-// ── Loading overlay ───────────────────────────────────────────
-function showLoading(message = 'Generating your campaign...') {
-  if (document.getElementById('_dgLoading')) return;
-  const el = document.createElement('div');
-  el.id = '_dgLoading';
-  el.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[90]';
-  el.innerHTML = `
-    <div class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-xs w-full mx-4">
-      <div class="relative w-16 h-16 mx-auto mb-5">
-        <div class="animate-spin h-16 w-16 border-4 border-orange-100 border-t-orange-500 rounded-full"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <h3 class="font-bold text-gray-900 mb-1">AI is Working</h3>
-      <p class="text-gray-500 text-sm">${message}</p>
-    </div>`;
-  document.body.appendChild(el);
-}
-
-function hideLoading() {
-  const el = document.getElementById('_dgLoading');
-  if (el) el.remove();
-}
-
-// ── Date formatter ────────────────────────────────────────────
-function formatDate(dateStr) {
-  if (!dateStr) return '—';
-  return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-// ── Status badge ──────────────────────────────────────────────
-function statusBadge(status) {
-  if (status === 'generated')
-    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>Generated</span>`;
-  if (status === 'draft')
-    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>Draft</span>`;
-  return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">${status}</span>`;
-}
+// ============================================================
+// Export (global)
+// ============================================================
+window.api = api;
