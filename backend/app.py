@@ -7,18 +7,18 @@ import os
 # Load env
 load_dotenv()
 
-from config import Config
-from models.db import init_db
+# ✅ FIXED IMPORTS
+from backend.config import Config
+from backend.models.db import init_db
 
-from routes.auth import auth_bp
-from routes.campaign import campaign_bp
-from routes.ai import ai_bp
+from backend.routes.auth import auth_bp
+from backend.routes.campaign import campaign_bp
+from backend.routes.ai import ai_bp
 
 
 def create_app():
     app = Flask(__name__)
 
-    # Load config
     app.config.from_object(Config)
 
     # Ensure folders exist
@@ -27,13 +27,12 @@ def create_app():
     # Init DB
     init_db(app.config["DATABASE_PATH"])
 
-    # ✅ CORS (IMPORTANT)
+    # CORS
     CORS(app)
 
     # JWT
-    jwt = JWTManager(app)
+    JWTManager(app)
 
-    # Debug logs
     print("🚀 Backend starting...")
     print("GEMINI:", "SET" if os.getenv("GEMINI_API_KEY") else "MISSING")
     print("JWT:", "SET" if os.getenv("JWT_SECRET_KEY") else "MISSING")
@@ -47,7 +46,6 @@ def create_app():
     app.register_blueprint(campaign_bp)
     app.register_blueprint(ai_bp)
 
-    # Health check
     @app.route("/")
     def home():
         return jsonify({
@@ -55,12 +53,10 @@ def create_app():
             "message": "DesiGrowth Backend Running 🚀"
         })
 
-    # Poster route
     @app.route("/poster/<filename>")
     def serve_poster(filename):
         return send_from_directory(app.config["POSTER_FOLDER"], filename)
 
-    # Error handler
     @app.errorhandler(Exception)
     def handle_exception(e):
         print("❌ ERROR:", str(e))
@@ -69,7 +65,6 @@ def create_app():
     return app
 
 
-# 🚀 LOCAL RUN ONLY (Render uses Gunicorn)
 if __name__ == "__main__":
     app = create_app()
     port = int(os.environ.get("PORT", 5000))
