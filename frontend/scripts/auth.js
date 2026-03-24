@@ -1,6 +1,5 @@
 // ============================================================
-// DesiGrowth — Auth Utility (FINAL)
-// Handles authentication, user state, and route protection
+// DesiGrowth — Auth Utility (FINAL FIXED)
 // ============================================================
 
 // ================= TOKEN =================
@@ -47,6 +46,9 @@ async function loadUser() {
 
   } catch (err) {
     console.error("User load failed:", err);
+
+    // 🔥 IMPORTANT FIX: if token invalid → logout
+    logout();
   }
 }
 
@@ -73,3 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+// ================= EXPORT (IMPORTANT) =================
+window.auth = {
+  getToken,
+  setToken,
+  removeToken,
+  logout
+};
