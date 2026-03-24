@@ -6,7 +6,7 @@
 // 🔥 Dynamic API base (LOCAL + PRODUCTION)
 const API_BASE = window.location.hostname === "localhost"
   ? "http://127.0.0.1:5000"
-  : "https://desigrowth-2.onrender.com";
+  : "https://desigrowth.onrender.com";  // ✅ correct URL
 
 // ============================================================
 // Helper: Get Auth Token
