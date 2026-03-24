@@ -213,7 +213,7 @@
   <script>
     // ── Already logged in → skip to dashboard ────────────────────────────────
     if (typeof getToken === 'function' && getToken()) {
-      window.location.href = '/frontend/pages/dashboard.html';
+      window.location.href = '/pages/dashboard.html';
     }
 
     // ── Spinner HTML helper ───────────────────────────────────────────────────
@@ -293,7 +293,7 @@
           document.getElementById('password').value
         );
         setToken(res.access_token);
-        window.location.href = '/frontend/pages/dashboard.html';
+        window.location.href = '/pages/dashboard.html';
       } catch (err) {
         showError(errEl, errTxt, err.message || 'Login failed. Please try again.');
         btn.disabled = false;
@@ -323,7 +323,7 @@
       try {
         const res = await api.signup(name, email, password);
         setToken(res.access_token);
-        window.location.href = '/frontend/pages/dashboard.html';
+        window.location.href = '/pages/dashboard.html';
       } catch (err) {
         showError(errEl, errTxt, err.message || 'Sign up failed. Please try again.');
         btn.disabled = false;
