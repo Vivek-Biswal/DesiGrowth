@@ -1,37 +1,38 @@
 // ============================================================
-// DesiGrowth API Layer
-// Handles all backend communication
+// DesiGrowth — FINAL API CLIENT
 // ============================================================
 
-// 🔥 Dynamic API base (LOCAL + PRODUCTION)
 const API_BASE = window.location.hostname === "localhost"
   ? "http://127.0.0.1:5000"
-  : "https://desigrowth.onrender.com";  // ✅ correct URL
+  : "https://desigrowth-2.onrender.com";
 
-// ============================================================
-// Helper: Get Auth Token
-// ============================================================
+// ================= TOKEN =================
 function getToken() {
   return localStorage.getItem("token");
 }
 
-// ============================================================
-// Helper: Request Wrapper
-// ============================================================
-async function request(endpoint, options = {}) {
+// ================= FETCH =================
+async function _fetch(path, options = {}) {
+  const token = getToken();
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {})
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   try {
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(getToken() && { Authorization: `Bearer ${getToken()}` })
-      },
-      ...options
+    const res = await fetch(API_BASE + path, {
+      ...options,
+      headers
     });
 
-    // 🔥 Handle non-JSON safely
     const text = await res.text();
-    let data;
 
+    let data;
     try {
       data = JSON.parse(text);
     } catch {
@@ -50,62 +51,52 @@ async function request(endpoint, options = {}) {
   }
 }
 
-// ============================================================
-// Auth APIs
-// ============================================================
+// ================= API =================
 const api = {
 
-  async signup(name, email, password) {
-    return request("/auth/signup", {
-      method: "POST",
-      body: JSON.stringify({ name, email, password })
-    });
-  },
-
+  // AUTH
   async login(email, password) {
-    return request("/auth/login", {
+    return _fetch("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password })
     });
   },
 
-  async getUser() {
-    return request("/auth/user");
+  async signup(name, email, password) {
+    return _fetch("/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({ name, email, password })
+    });
   },
 
-  // ============================================================
-  // Campaign APIs
-  // ============================================================
+  async getUser() {
+    return _fetch("/auth/user");
+  },
 
+  // CAMPAIGNS
   async createCampaign(data) {
-    return request("/campaign/create", {
+    return _fetch("/campaign/create", {
       method: "POST",
       body: JSON.stringify(data)
     });
   },
 
   async getCampaigns() {
-    return request("/campaign/all");
+    return _fetch("/campaign/all");
   },
 
   async getCampaign(id) {
-    return request(`/campaign/${id}`);
+    return _fetch(`/campaign/${id}`);
   },
 
-  // ============================================================
-  // AI APIs
-  // ============================================================
-
+  // AI
   async generateAI(data) {
-    return request("/ai/generate", {
+    return _fetch("/ai/generate", {
       method: "POST",
       body: JSON.stringify(data)
     });
   }
-
 };
 
-// ============================================================
-// Export (global)
-// ============================================================
+// ================= EXPORT =================
 window.api = api;

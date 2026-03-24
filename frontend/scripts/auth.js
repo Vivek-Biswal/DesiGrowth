@@ -1,45 +1,75 @@
-// ================================
-// DesiGrowth — Auth Module
-// ================================
+// ============================================================
+// DesiGrowth — Auth Utility (FINAL)
+// Handles authentication, user state, and route protection
+// ============================================================
 
-const DG_TOKEN_KEY = 'dg_token';
-const DG_USER_KEY  = 'dg_user';
-
+// ================= TOKEN =================
 function getToken() {
-  return localStorage.getItem(DG_TOKEN_KEY);
+  return localStorage.getItem("token");
 }
 
-function getUser() {
-  try { return JSON.parse(localStorage.getItem(DG_USER_KEY)); }
-  catch { return null; }
+function setToken(token) {
+  localStorage.setItem("token", token);
 }
 
-function setAuth(token, user) {
-  localStorage.setItem(DG_TOKEN_KEY, token);
-  localStorage.setItem(DG_USER_KEY, JSON.stringify(user));
+function removeToken() {
+  localStorage.removeItem("token");
 }
 
-function clearAuth() {
-  localStorage.removeItem(DG_TOKEN_KEY);
-  localStorage.removeItem(DG_USER_KEY);
+// ================= AUTH CHECK =================
+function isAuthenticated() {
+  return !!getToken();
 }
 
-function logout() {
-  clearAuth();
-  window.location.href = '/frontend/pages/login.html';
-}
-
+// ================= REQUIRE AUTH =================
 function requireAuth() {
-  if (!getToken()) {
-    window.location.href = '/frontend/pages/login.html';
+  if (!isAuthenticated()) {
+    window.location.href = "/pages/login.html";
   }
 }
 
-function getUserDisplayName() {
-  const u = getUser();
-  return u ? (u.name || u.email || 'User') : 'User';
+// ================= REQUIRE GUEST =================
+function requireGuest() {
+  if (isAuthenticated()) {
+    window.location.href = "/pages/dashboard.html";
+  }
 }
 
-function getUserInitial() {
-  return getUserDisplayName().charAt(0).toUpperCase();
+// ================= LOAD USER =================
+async function loadUser() {
+  try {
+    const res = await window.api.getUser();
+
+    if (res && res.user) {
+      const nameEl = document.querySelector("#userName");
+      if (nameEl) nameEl.textContent = res.user.name || "User";
+    }
+
+  } catch (err) {
+    console.error("User load failed:", err);
+  }
 }
+
+// ================= LOGOUT =================
+function logout() {
+  removeToken();
+  window.location.href = "/pages/login.html";
+}
+
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
+
+  const path = window.location.pathname;
+
+  // 🔐 Protect dashboard & private pages
+  if (path.includes("dashboard") || path.includes("builder") || path.includes("preview")) {
+    requireAuth();
+    loadUser();
+  }
+
+  // 🚫 Prevent logged-in users from accessing login/signup
+  if (path.includes("login") || path.includes("signup")) {
+    requireGuest();
+  }
+
+});

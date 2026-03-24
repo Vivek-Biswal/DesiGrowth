@@ -1,111 +1,94 @@
 // ============================================================
-// DesiGrowth — API Client (FINAL FIXED VERSION)
+// DesiGrowth — Frontend App Logic (FINAL)
 // ============================================================
 
-// ✅ Correct backend URL (auto switch local + production)
-const API_BASE = window.location.hostname === "localhost"
-  ? "http://127.0.0.1:5000"
-  : "https://desigrowth.onrender.com";
+// ================= TOKEN =================
+function setToken(token) {
+  localStorage.setItem("token", token);
+}
 
-// ============================================================
-// Helper: Get Token
-// ============================================================
 function getToken() {
   return localStorage.getItem("token");
 }
 
-// ============================================================
-// Internal Fetch Helper
-// ============================================================
-async function _fetch(path, options = {}) {
-  const token = getToken();
+function removeToken() {
+  localStorage.removeItem("token");
+}
 
-  const headers = {
-    "Content-Type": "application/json",
-    ...(options.headers || {})
-  };
+// ================= LOGIN =================
+async function handleLogin(e) {
+  e.preventDefault();
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
+  const email = document.querySelector("#email").value;
+  const password = document.querySelector("#password").value;
+
+  const errorBox = document.querySelector("#error");
+  errorBox.textContent = "";
 
   try {
-    const res = await fetch(API_BASE + path, {
-      ...options,
-      headers
-    });
+    const res = await window.api.login(email, password);
 
-    const text = await res.text();
+    // save token
+    setToken(res.access_token || res.token);
 
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error("Invalid server response");
-    }
-
-    if (!res.ok) {
-      throw new Error(data.error || "Request failed");
-    }
-
-    return data;
+    // redirect
+    window.location.href = "/pages/dashboard.html";
 
   } catch (err) {
-    console.error("API ERROR:", err);
-    throw err;
+    console.error(err);
+    errorBox.textContent = err.message || "Login failed";
   }
 }
 
-// ============================================================
-// API METHODS
-// ============================================================
-const api = {
+// ================= SIGNUP =================
+async function handleSignup(e) {
+  e.preventDefault();
 
-  // 🔐 AUTH
-  async login(email, password) {
-    return _fetch('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password })
-    });
-  },
+  const name = document.querySelector("#name").value;
+  const email = document.querySelector("#email").value;
+  const password = document.querySelector("#password").value;
 
-  async signup(name, email, password) {
-    return _fetch('/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password })
-    });
-  },
+  const errorBox = document.querySelector("#error");
+  errorBox.textContent = "";
 
-  async getUser() {
-    return _fetch('/auth/user');
-  },
+  try {
+    await window.api.signup(name, email, password);
 
-  // 📊 CAMPAIGNS
-  async createCampaign(data) {
-    return _fetch('/campaign/create', {
-      method: 'POST',
-      body: JSON.stringify(data)
-    });
-  },
+    alert("Signup successful! Please login.");
+    window.location.href = "/pages/login.html";
 
-  async getCampaigns() {
-    return _fetch('/campaign/all');
-  },
-
-  async getCampaign(id) {
-    return _fetch(`/campaign/${id}`);
-  },
-
-  // 🤖 AI
-  async generateAI(data) {
-    return _fetch('/ai/generate', {
-      method: 'POST',
-      body: JSON.stringify(data)
-    });
+  } catch (err) {
+    console.error(err);
+    errorBox.textContent = err.message || "Signup failed";
   }
-};
+}
 
-// ============================================================
-// Export globally
-// ============================================================
-window.api = api;
+// ================= AUTH CHECK =================
+function requireAuth() {
+  if (!getToken()) {
+    window.location.href = "/pages/login.html";
+  }
+}
+
+// ================= LOGOUT =================
+function logout() {
+  removeToken();
+  window.location.href = "/pages/login.html";
+}
+
+// ================= AUTO INIT =================
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Login page
+  const loginForm = document.querySelector("#loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", handleLogin);
+  }
+
+  // Signup page
+  const signupForm = document.querySelector("#signupForm");
+  if (signupForm) {
+    signupForm.addEventListener("submit", handleSignup);
+  }
+
+});
