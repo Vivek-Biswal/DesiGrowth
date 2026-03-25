@@ -183,7 +183,7 @@
         const res = await api.createCampaign(data);
         hideLoading();
         localStorage.setItem('latest_campaign', JSON.stringify(res.campaign));
-        window.location.href = '/frontend/pages/preview.html';
+        window.location.href = '/pages/dashboard.html';
       } catch (err) {
         hideLoading();
         errorTxt.textContent = err.message || 'Something went wrong. Please try again.';

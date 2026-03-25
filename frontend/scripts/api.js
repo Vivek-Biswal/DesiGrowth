@@ -1,102 +1,123 @@
-// ============================================================
-// DesiGrowth — FINAL API CLIENT
-// ============================================================
+// ===============================
+// API BASE URL
+// ===============================
+const API_BASE = 'http://127.0.0.1:5000'; // change if deployed
 
-const API_BASE = window.location.hostname === "localhost"
-  ? "http://127.0.0.1:5000"
-  : "https://desigrowth-2.onrender.com";
 
-// ================= TOKEN =================
-function getToken() {
-  return localStorage.getItem("token");
-}
-
-// ================= FETCH =================
-async function _fetch(path, options = {}) {
-  const token = getToken();
-
+// ===============================
+// HELPER: GET HEADERS WITH TOKEN
+// ===============================
+function getHeaders(isAuthRequired = true) {
   const headers = {
-    "Content-Type": "application/json",
-    ...(options.headers || {})
+    'Content-Type': 'application/json'
   };
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  if (isAuthRequired) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
   }
 
-  try {
-    const res = await fetch(API_BASE + path, {
-      ...options,
-      headers
-    });
-
-    const text = await res.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error("Invalid server response");
-    }
-
-    if (!res.ok) {
-      throw new Error(data.error || "Request failed");
-    }
-
-    return data;
-
-  } catch (err) {
-    console.error("API ERROR:", err);
-    throw err;
-  }
+  return headers;
 }
 
-// ================= API =================
+
+// ===============================
+// HELPER: HANDLE RESPONSE
+// ===============================
+async function handleResponse(res) {
+  let data;
+
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error('Invalid server response');
+  }
+
+  if (!res.ok) {
+    throw new Error(data.message || 'Something went wrong');
+  }
+
+  return data;
+}
+
+
+// ===============================
+// AUTH APIs
+// ===============================
 const api = {
 
-  // AUTH
+  // 🔐 LOGIN
   async login(email, password) {
-    return _fetch("/auth/login", {
-      method: "POST",
+    const res = await fetch(`${API_BASE}/login`, {
+      method: 'POST',
+      headers: getHeaders(false), // no token needed
       body: JSON.stringify({ email, password })
     });
+
+    return handleResponse(res);
   },
 
+
+  // 📝 SIGNUP
   async signup(name, email, password) {
-    return _fetch("/auth/signup", {
-      method: "POST",
+    const res = await fetch(`${API_BASE}/signup`, {
+      method: 'POST',
+      headers: getHeaders(false),
       body: JSON.stringify({ name, email, password })
     });
+
+    return handleResponse(res);
   },
 
+
+  // 👤 GET USER PROFILE
   async getUser() {
-    return _fetch("/auth/user");
-  },
-
-  // CAMPAIGNS
-  async createCampaign(data) {
-    return _fetch("/campaign/create", {
-      method: "POST",
-      body: JSON.stringify(data)
+    const res = await fetch(`${API_BASE}/user`, {
+      method: 'GET',
+      headers: getHeaders(true)
     });
+
+    return handleResponse(res);
   },
 
+
+  // ===============================
+  // CAMPAIGN APIs
+  // ===============================
+
+  // 📦 GET ALL CAMPAIGNS
   async getCampaigns() {
-    return _fetch("/campaign/all");
+    const res = await fetch(`${API_BASE}/campaigns`, {
+      method: 'GET',
+      headers: getHeaders(true)
+    });
+
+    return handleResponse(res);
   },
 
-  async getCampaign(id) {
-    return _fetch(`/campaign/${id}`);
-  },
 
-  // AI
-  async generateAI(data) {
-    return _fetch("/ai/generate", {
-      method: "POST",
+  // 🚀 CREATE CAMPAIGN
+  async createCampaign(data) {
+    const res = await fetch(`${API_BASE}/campaigns`, {
+      method: 'POST',
+      headers: getHeaders(true),
       body: JSON.stringify(data)
     });
-  }
-};
 
-// ================= EXPORT =================
-window.api = api;
+    return handleResponse(res);
+  },
+
+
+  // ❌ DELETE CAMPAIGN (optional)
+  async deleteCampaign(id) {
+    const res = await fetch(`${API_BASE}/campaigns/${id}`, {
+      method: 'DELETE',
+      headers: getHeaders(true)
+    });
+
+    return handleResponse(res);
+  }
+
+};
