@@ -1,99 +1,85 @@
-// ===============================
-// TOKEN MANAGEMENT
-// ===============================
+// ============================================================
+// DesiGrowth — Auth Utility (FINAL FIXED)
+// ============================================================
 
-// Save token
-function setToken(token) {
-  localStorage.setItem('token', token);
-}
-
-// Get token
+// ================= TOKEN =================
 function getToken() {
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 }
 
-// Remove token
-function clearToken() {
-  localStorage.removeItem('token');
+function setToken(token) {
+  localStorage.setItem("token", token);
 }
 
-
-// ===============================
-// USER MANAGEMENT (optional but useful)
-// ===============================
-
-// Save user data
-function setUser(user) {
-  localStorage.setItem('user', JSON.stringify(user));
+function removeToken() {
+  localStorage.removeItem("token");
 }
 
-// Get user data
-function getUser() {
-  try {
-    return JSON.parse(localStorage.getItem('user') || '{}');
-  } catch {
-    return {};
-  }
+// ================= AUTH CHECK =================
+function isAuthenticated() {
+  return !!getToken();
 }
 
-// Clear user
-function clearUser() {
-  localStorage.removeItem('user');
-}
-
-
-// ===============================
-// AUTH GUARD (PROTECT PAGES)
-// ===============================
+// ================= REQUIRE AUTH =================
 function requireAuth() {
-  const token = getToken();
-
-  if (!token) {
-    // Not logged in → redirect
-    window.location.href = '/pages/login.html';
-    return;
+  if (!isAuthenticated()) {
+    window.location.href = "/pages/login.html";
   }
 }
 
+// ================= REQUIRE GUEST =================
+function requireGuest() {
+  if (isAuthenticated()) {
+    window.location.href = "/pages/dashboard.html";
+  }
+}
 
-// ===============================
-// OPTIONAL: AUTO VALIDATE TOKEN
-// ===============================
-async function validateToken() {
+// ================= LOAD USER =================
+async function loadUser() {
   try {
-    const res = await api.getUser();
-    setUser(res.user); // store fresh user
-    return true;
+    const res = await window.api.getUser();
+
+    if (res && res.user) {
+      const nameEl = document.querySelector("#userName");
+      if (nameEl) nameEl.textContent = res.user.name || "User";
+    }
+
   } catch (err) {
-    logout(); // invalid token → logout
-    return false;
+    console.error("User load failed:", err);
+
+    // 🔥 IMPORTANT FIX: if token invalid → logout
+    logout();
   }
 }
 
-
-// ===============================
-// LOGOUT
-// ===============================
+// ================= LOGOUT =================
 function logout() {
-  clearToken();
-  clearUser();
-
-  // Optional: clear other app data
-  localStorage.removeItem('ads');
-  localStorage.removeItem('latest_campaign');
-
-  window.location.href = '/pages/login.html';
+  removeToken();
+  window.location.href = "/pages/login.html";
 }
 
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", () => {
 
-// ===============================
-// OPTIONAL: INIT AUTH STATE
-// ===============================
-async function initAuth() {
-  const token = getToken();
+  const path = window.location.pathname;
 
-  if (!token) return;
+  // 🔐 Protect dashboard & private pages
+  if (path.includes("dashboard") || path.includes("builder") || path.includes("preview")) {
+    requireAuth();
+    loadUser();
+  }
 
-  // Try to validate token silently
-  await validateToken();
-}
+  // 🚫 Prevent logged-in users from accessing login/signup
+  if (path.includes("login") || path.includes("signup")) {
+    requireGuest();
+  }
+
+});
+
+// ================= EXPORT (IMPORTANT) =================
+window.auth = {
+  getToken,
+  setToken,
+  removeToken,
+  logout
+};

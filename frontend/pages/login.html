@@ -293,6 +293,7 @@
           document.getElementById('password').value
         );
         setToken(res.access_token);
+        setUser(res.user);
         window.location.href = '/pages/dashboard.html';
       } catch (err) {
         showError(errEl, errTxt, err.message || 'Login failed. Please try again.');
@@ -323,6 +324,7 @@
       try {
         const res = await api.signup(name, email, password);
         setToken(res.access_token);
+        setUser(res.user);
         window.location.href = '/pages/dashboard.html';
       } catch (err) {
         showError(errEl, errTxt, err.message || 'Sign up failed. Please try again.');

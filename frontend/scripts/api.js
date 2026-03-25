@@ -1,18 +1,18 @@
 // ===============================
 // API BASE URL
 // ===============================
-const API_BASE = 'http://127.0.0.1:5000'; // change if deployed
+const API_BASE = 'http://127.0.0.1:5000';
 
 
 // ===============================
-// HELPER: GET HEADERS WITH TOKEN
+// HELPER: HEADERS
 // ===============================
-function getHeaders(isAuthRequired = true) {
+function getHeaders(auth = true) {
   const headers = {
     'Content-Type': 'application/json'
   };
 
-  if (isAuthRequired) {
+  if (auth) {
     const token = localStorage.getItem('token');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
@@ -27,16 +27,10 @@ function getHeaders(isAuthRequired = true) {
 // HELPER: HANDLE RESPONSE
 // ===============================
 async function handleResponse(res) {
-  let data;
-
-  try {
-    data = await res.json();
-  } catch {
-    throw new Error('Invalid server response');
-  }
+  const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.message || 'Something went wrong');
+    throw new Error(data.message || data.error || 'Something went wrong');
   }
 
   return data;
@@ -44,25 +38,26 @@ async function handleResponse(res) {
 
 
 // ===============================
-// AUTH APIs
+// API OBJECT
 // ===============================
 const api = {
 
-  // 🔐 LOGIN
+  // =========================
+  // 🔐 AUTH
+  // =========================
+
   async login(email, password) {
-    const res = await fetch(`${API_BASE}/login`, {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
-      headers: getHeaders(false), // no token needed
+      headers: getHeaders(false),
       body: JSON.stringify({ email, password })
     });
 
     return handleResponse(res);
   },
 
-
-  // 📝 SIGNUP
   async signup(name, email, password) {
-    const res = await fetch(`${API_BASE}/signup`, {
+    const res = await fetch(`${API_BASE}/auth/signup`, {
       method: 'POST',
       headers: getHeaders(false),
       body: JSON.stringify({ name, email, password })
@@ -71,10 +66,8 @@ const api = {
     return handleResponse(res);
   },
 
-
-  // 👤 GET USER PROFILE
   async getUser() {
-    const res = await fetch(`${API_BASE}/user`, {
+    const res = await fetch(`${API_BASE}/auth/user`, {
       method: 'GET',
       headers: getHeaders(true)
     });
@@ -83,13 +76,12 @@ const api = {
   },
 
 
-  // ===============================
-  // CAMPAIGN APIs
-  // ===============================
+  // =========================
+  // 📢 CAMPAIGNS
+  // =========================
 
-  // 📦 GET ALL CAMPAIGNS
   async getCampaigns() {
-    const res = await fetch(`${API_BASE}/campaigns`, {
+    const res = await fetch(`${API_BASE}/campaign/all`, {
       method: 'GET',
       headers: getHeaders(true)
     });
@@ -97,10 +89,8 @@ const api = {
     return handleResponse(res);
   },
 
-
-  // 🚀 CREATE CAMPAIGN
   async createCampaign(data) {
-    const res = await fetch(`${API_BASE}/campaigns`, {
+    const res = await fetch(`${API_BASE}/campaign/create`, {
       method: 'POST',
       headers: getHeaders(true),
       body: JSON.stringify(data)
@@ -110,11 +100,15 @@ const api = {
   },
 
 
-  // ❌ DELETE CAMPAIGN (optional)
-  async deleteCampaign(id) {
-    const res = await fetch(`${API_BASE}/campaigns/${id}`, {
-      method: 'DELETE',
-      headers: getHeaders(true)
+  // =========================
+  // 🤖 AI GENERATION
+  // =========================
+
+  async generateAI(data) {
+    const res = await fetch(`${API_BASE}/ai/generate`, {
+      method: 'POST',
+      headers: getHeaders(true),
+      body: JSON.stringify(data)
     });
 
     return handleResponse(res);
