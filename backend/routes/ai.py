@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend.ai_generator import generate_marketing_content
+from backend.ai_module.ai_generator import generate_marketing_content
 
 ai_bp = Blueprint("ai", __name__, url_prefix="/ai")
 
