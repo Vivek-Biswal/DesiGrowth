@@ -1,85 +1,87 @@
-// ============================================================
-// DesiGrowth — Auth Utility (FINAL FIXED)
-// ============================================================
+// ===============================
+// TOKEN MANAGEMENT
+// ===============================
 
-// ================= TOKEN =================
-function getToken() {
-  return localStorage.getItem("token");
-}
-
+// Save token
 function setToken(token) {
-  localStorage.setItem("token", token);
+  localStorage.setItem('token', token);
 }
 
-function removeToken() {
-  localStorage.removeItem("token");
+// Get token
+function getToken() {
+  return localStorage.getItem('token');
 }
 
-// ================= AUTH CHECK =================
-function isAuthenticated() {
-  return !!getToken();
+// Remove token
+function clearToken() {
+  localStorage.removeItem('token');
 }
 
-// ================= REQUIRE AUTH =================
-function requireAuth() {
-  if (!isAuthenticated()) {
-    window.location.href = "/pages/login.html";
-  }
+
+// ===============================
+// USER MANAGEMENT
+// ===============================
+
+// Save user
+function setUser(user) {
+  localStorage.setItem('user', JSON.stringify(user));
 }
 
-// ================= REQUIRE GUEST =================
-function requireGuest() {
-  if (isAuthenticated()) {
-    window.location.href = "/pages/dashboard.html";
-  }
-}
-
-// ================= LOAD USER =================
-async function loadUser() {
+// Get user
+function getUser() {
   try {
-    const res = await window.api.getUser();
-
-    if (res && res.user) {
-      const nameEl = document.querySelector("#userName");
-      if (nameEl) nameEl.textContent = res.user.name || "User";
-    }
-
-  } catch (err) {
-    console.error("User load failed:", err);
-
-    // 🔥 IMPORTANT FIX: if token invalid → logout
-    logout();
+    return JSON.parse(localStorage.getItem('user') || '{}');
+  } catch {
+    return {};
   }
 }
 
-// ================= LOGOUT =================
+// Remove user
+function clearUser() {
+  localStorage.removeItem('user');
+}
+
+
+// ===============================
+// AUTH CHECK
+// ===============================
+
+// Protect pages
+function requireAuth() {
+  const token = getToken();
+
+  if (!token) {
+    window.location.href = '/pages/login.html';
+  }
+}
+
+
+// ===============================
+// LOGOUT
+// ===============================
+
 function logout() {
-  removeToken();
-  window.location.href = "/pages/login.html";
+  clearToken();
+  clearUser();
+
+  // optional cleanup
+  localStorage.removeItem('latest_campaign');
+
+  window.location.href = '/pages/login.html';
 }
 
-// ================= INIT =================
-document.addEventListener("DOMContentLoaded", () => {
 
-  const path = window.location.pathname;
+// ===============================
+// OPTIONAL: AUTO VALIDATE USER
+// ===============================
 
-  // 🔐 Protect dashboard & private pages
-  if (path.includes("dashboard") || path.includes("builder") || path.includes("preview")) {
-    requireAuth();
-    loadUser();
+async function validateToken() {
+  try {
+    const res = await api.getUser();
+    setUser(res.user);
+    return true;
+  } catch (err) {
+    logout();
+    return false;
   }
-
-  // 🚫 Prevent logged-in users from accessing login/signup
-  if (path.includes("login") || path.includes("signup")) {
-    requireGuest();
-  }
-
-});
-
-// ================= EXPORT (IMPORTANT) =================
-window.auth = {
-  getToken,
-  setToken,
-  removeToken,
-  logout
-};
+}
