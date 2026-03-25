@@ -1,10 +1,10 @@
-from tinydb import TinyDB
+from pymongo import MongoClient
+import os
 
-db = None
+client = MongoClient(os.getenv("MONGO_URI"))
 
-def init_db(path):
-    global db
-    db = TinyDB(path)
+db = client["desigrowth"]
 
-def get_db():
-    return db
+users = db["users"]
+campaigns = db["campaigns"]
+ads = db["ads"]
