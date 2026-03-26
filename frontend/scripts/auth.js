@@ -1,57 +1,47 @@
 // ===============================
 // TOKEN MANAGEMENT
 // ===============================
-
-// Save token
 function setToken(token) {
-  localStorage.setItem('token', token);
+  localStorage.setItem("token", token);
 }
 
-// Get token
 function getToken() {
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 }
 
-// Remove token
 function clearToken() {
-  localStorage.removeItem('token');
+  localStorage.removeItem("token");
 }
 
 
 // ===============================
 // USER MANAGEMENT
 // ===============================
-
-// Save user
 function setUser(user) {
-  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem("user", JSON.stringify(user));
 }
 
-// Get user
 function getUser() {
   try {
-    return JSON.parse(localStorage.getItem('user') || '{}');
+    return JSON.parse(localStorage.getItem("user") || "{}");
   } catch {
     return {};
   }
 }
 
-// Remove user
 function clearUser() {
-  localStorage.removeItem('user');
+  localStorage.removeItem("user");
 }
 
 
 // ===============================
 // AUTH CHECK
 // ===============================
-
-// Protect pages
 function requireAuth() {
   const token = getToken();
 
   if (!token) {
-    window.location.href = '/pages/login.html';
+    window.location.href = "login.html";
   }
 }
 
@@ -59,29 +49,67 @@ function requireAuth() {
 // ===============================
 // LOGOUT
 // ===============================
-
 function logout() {
   clearToken();
   clearUser();
-
-  // optional cleanup
-  localStorage.removeItem('latest_campaign');
-
-  window.location.href = '/pages/login.html';
+  window.location.href = "login.html";
 }
 
 
 // ===============================
-// OPTIONAL: AUTO VALIDATE USER
+// SIGNUP
 // ===============================
+async function handleSignup(e) {
+  e.preventDefault();
 
-async function validateToken() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
   try {
-    const res = await api.getUser();
-    setUser(res.user);
-    return true;
+    const res = await api.signup({ name, email, password });
+
+    setToken(res.data.access_token);
+    setUser(res.data.user);
+
+    window.location.href = "dashboard.html";
+
   } catch (err) {
-    logout();
-    return false;
+    showError(err.message);
   }
+}
+
+
+// ===============================
+// LOGIN
+// ===============================
+async function handleLogin(e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    const res = await api.login({ email, password });
+
+    setToken(res.data.access_token);
+    setUser(res.data.user);
+
+    window.location.href = "dashboard.html";
+
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+
+// ===============================
+// ERROR DISPLAY
+// ===============================
+function showError(message) {
+  const el = document.getElementById("errorBox");
+  if (!el) return;
+
+  el.innerText = message;
+  el.style.display = "block";
 }

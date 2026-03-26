@@ -96,10 +96,10 @@ function renderSidebar(active = '') {
         <!-- Nav -->
         <nav class="space-y-2">
 
-          ${navItem('dashboard', 'Dashboard', '/pages/dashboard.html', active)}
-          ${navItem('builder', 'Create Campaign', '/pages/builder.html', active)}
-          ${navItem('analytics', 'Analytics', '/pages/analytics.html', active)}
-         ${navItem('profile', 'Profile', '/pages/profile.html', active)}
+          ${navItem('dashboard', 'Dashboard', 'dashboard.html', active)}
+          ${navItem('builder', 'Create Campaign', 'builder.html', active)}
+          ${navItem('analytics', 'Analytics', 'analytics.html', active)}
+          ${navItem('profile', 'Profile', 'profile.html', active)}
 
         </nav>
       </div>
@@ -124,10 +124,10 @@ function renderMobileNav(active = '') {
   mobile.innerHTML = `
     <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-around py-2 z-50">
 
-      ${mobileItem('dashboard', '🏠', '/pages/dashboard.html', active)}
-      ${mobileItem('builder', '➕', '/pages/builder.html', active)}
-      ${mobileItem('analytics', '📊', '/pages/analytics.html', active)}
-      ${mobileItem('profile', '👤', '/pages/profile.html', active)}
+      ${mobileItem('dashboard', '🏠', 'dashboard.html', active)}
+      ${mobileItem('builder', '➕', 'builder.html', active)}
+      ${mobileItem('analytics', '📊', 'analytics.html', active)}
+      ${mobileItem('profile', '👤', 'profile.html', active)}
 
     </div>
   `;
@@ -163,9 +163,19 @@ function mobileItem(key, icon, href, active) {
 
 
 // ===============================
-// INIT COMMON UI
+// AUTH + INIT (IMPORTANT)
 // ===============================
 document.addEventListener('DOMContentLoaded', () => {
-  // render mobile nav automatically
+
+  // 🔐 Protect all pages except login
+  const path = window.location.pathname;
+
+  if (!path.includes("login.html") && !localStorage.getItem("token")) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Render mobile nav
   renderMobileNav();
+
 });

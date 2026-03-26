@@ -60,7 +60,7 @@
           <!-- Email -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-            <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required
+            <input id="email" type="email" placeholder="Email" required
               class="w-full border border-gray-200 bg-gray-50 px-4 py-3 rounded-xl text-sm text-gray-900
                      placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
                      focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed">
@@ -70,7 +70,7 @@
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
             <div class="relative">
-              <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required
+              <input id="password" type="password" placeholder="Password" required
                 class="w-full border border-gray-200 bg-gray-50 px-4 py-3 pr-12 rounded-xl text-sm text-gray-900
                        placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400
                        focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed">
@@ -210,131 +210,116 @@
 <script src="../scripts/auth.js"></script>
 <script src="../scripts/app.js"></script>
 
-  <script>
-    // ── Already logged in → skip to dashboard ────────────────────────────────
-    if (typeof getToken === 'function' && getToken()) {
-      window.location.href = '/pages/dashboard.html';
+<script>
+  // ── Already logged in ─────────────────────────────
+  if (typeof getToken === 'function' && getToken()) {
+    window.location.href = 'dashboard.html';
+  }
+
+  function spinnerHTML(label) {
+    return `<svg class="spinner w-4 h-4" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>${label}`;
+  }
+
+  function showError(msgEl, textEl, msg) {
+    textEl.textContent = msg;
+    msgEl.classList.remove('hidden');
+  }
+
+  function hideError(msgEl, textEl) {
+    msgEl.classList.add('hidden');
+    textEl.textContent = '';
+  }
+
+  function bindPasswordToggle(inputId, btnId, eyeOpenId, eyeClosedId) {
+    document.getElementById(btnId).addEventListener('click', () => {
+      const input = document.getElementById(inputId);
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      document.getElementById(eyeOpenId).classList.toggle('hidden', isHidden);
+      document.getElementById(eyeClosedId).classList.toggle('hidden', !isHidden);
+    });
+  }
+
+  bindPasswordToggle('password', 'toggleLoginPw', 'eyeOpen', 'eyeClosed');
+  bindPasswordToggle('signupPassword', 'toggleSignupPw', 'eyeOpenSignup', 'eyeClosedSignup');
+
+  // View toggle
+  document.getElementById('goSignup').onclick = () => {
+    loginView.classList.add('hidden');
+    signupView.classList.remove('hidden');
+  };
+
+  document.getElementById('goLogin').onclick = () => {
+    signupView.classList.add('hidden');
+    loginView.classList.remove('hidden');
+  };
+
+  // ── LOGIN ─────────────────────────────────────────
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const btn = document.getElementById('loginBtn');
+    const errEl = document.getElementById('loginError');
+    const errTxt = document.getElementById('loginErrorText');
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    hideError(errEl, errTxt);
+
+    btn.disabled = true;
+    btn.innerHTML = spinnerHTML('Signing in…');
+
+    try {
+      const res = await api.login({ email, password });
+
+      setToken(res.data.access_token);
+      setUser(res.data.user);
+
+      window.location.href = 'dashboard.html';
+
+    } catch (err) {
+      showError(errEl, errTxt, err.message);
+      btn.disabled = false;
+      btn.innerHTML = 'Sign in';
     }
+  });
 
-    // ── Spinner HTML helper ───────────────────────────────────────────────────
-    function spinnerHTML(label) {
-      return `<svg class="spinner w-4 h-4" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-      </svg>${label}`;
+  // ── SIGNUP ────────────────────────────────────────
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const btn = document.getElementById('signupBtn');
+    const errEl = document.getElementById('signupError');
+    const errTxt = document.getElementById('signupErrorText');
+
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+
+    hideError(errEl, errTxt);
+
+    btn.disabled = true;
+    btn.innerHTML = spinnerHTML('Creating account…');
+
+    try {
+      const res = await api.signup({ name, email, password });
+
+      setToken(res.data.access_token);
+      setUser(res.data.user);
+
+      window.location.href = 'dashboard.html';
+
+    } catch (err) {
+      showError(errEl, errTxt, err.message);
+      btn.disabled = false;
+      btn.innerHTML = 'Create Account';
     }
-
-    // ── Error helpers ─────────────────────────────────────────────────────────
-    function showError(msgEl, textEl, msg) {
-      textEl.textContent = msg;
-      msgEl.classList.remove('hidden');
-    }
-    function hideError(msgEl, textEl) {
-      msgEl.classList.add('hidden');
-      textEl.textContent = '';
-    }
-
-    // ── Password visibility toggle ────────────────────────────────────────────
-    function bindPasswordToggle(inputId, btnId, eyeOpenId, eyeClosedId) {
-      document.getElementById(btnId).addEventListener('click', () => {
-        const input     = document.getElementById(inputId);
-        const isHidden  = input.type === 'password';
-        input.type      = isHidden ? 'text' : 'password';
-        document.getElementById(eyeOpenId).classList.toggle('hidden', isHidden);
-        document.getElementById(eyeClosedId).classList.toggle('hidden', !isHidden);
-      });
-    }
-    bindPasswordToggle('password',       'toggleLoginPw',  'eyeOpen',       'eyeClosed');
-    bindPasswordToggle('signupPassword', 'toggleSignupPw', 'eyeOpenSignup', 'eyeClosedSignup');
-
-    // ── View toggle ───────────────────────────────────────────────────────────
-    document.getElementById('goSignup').addEventListener('click', () => {
-      document.getElementById('loginView').classList.add('hidden');
-      document.getElementById('signupView').classList.remove('hidden');
-    });
-    document.getElementById('goLogin').addEventListener('click', () => {
-      document.getElementById('signupView').classList.add('hidden');
-      document.getElementById('loginView').classList.remove('hidden');
-    });
-
-    // ── Auto-clear errors on input ────────────────────────────────────────────
-    ['email', 'password'].forEach(id => {
-      document.getElementById(id).addEventListener('input', () =>
-        hideError(
-          document.getElementById('loginError'),
-          document.getElementById('loginErrorText')
-        ));
-    });
-    ['signupName', 'signupEmail', 'signupPassword'].forEach(id => {
-      document.getElementById(id).addEventListener('input', () =>
-        hideError(
-          document.getElementById('signupError'),
-          document.getElementById('signupErrorText')
-        ));
-    });
-
-    // ── Login ─────────────────────────────────────────────────────────────────
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const btn    = document.getElementById('loginBtn');
-      const errEl  = document.getElementById('loginError');
-      const errTxt = document.getElementById('loginErrorText');
-      const inputs = ['email', 'password'].map(id => document.getElementById(id));
-
-      hideError(errEl, errTxt);
-      btn.disabled = true;
-      btn.innerHTML = spinnerHTML('Signing in…');
-      inputs.forEach(el => el.disabled = true);
-
-      try {
-        const res = await api.login(
-          document.getElementById('email').value,
-          document.getElementById('password').value
-        );
-        setToken(res.access_token);
-        setUser(res.user);
-        window.location.href = '/pages/dashboard.html';
-      } catch (err) {
-        showError(errEl, errTxt, err.message || 'Login failed. Please try again.');
-        btn.disabled = false;
-        btn.innerHTML = 'Sign in';
-        inputs.forEach(el => el.disabled = false);
-      }
-    });
-
-    // ── Signup ────────────────────────────────────────────────────────────────
-    document.getElementById('signupForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const btn    = document.getElementById('signupBtn');
-      const errEl  = document.getElementById('signupError');
-      const errTxt = document.getElementById('signupErrorText');
-      const inputs = ['signupName', 'signupEmail', 'signupPassword'].map(id => document.getElementById(id));
-
-      const name     = document.getElementById('signupName').value.trim();
-      const email    = document.getElementById('signupEmail').value.trim();
-      const password = document.getElementById('signupPassword').value;
-
-      hideError(errEl, errTxt);
-      btn.disabled = true;
-      btn.innerHTML = spinnerHTML('Creating account…');
-      inputs.forEach(el => el.disabled = true);
-
-      try {
-        const res = await api.signup(name, email, password);
-        setToken(res.access_token);
-        setUser(res.user);
-        window.location.href = '/pages/dashboard.html';
-      } catch (err) {
-        showError(errEl, errTxt, err.message || 'Sign up failed. Please try again.');
-        btn.disabled = false;
-        btn.innerHTML = 'Create Account';
-        inputs.forEach(el => el.disabled = false);
-      }
-    });
-  </script>
-
+  });
+</script>
 
 </body>
 </html>

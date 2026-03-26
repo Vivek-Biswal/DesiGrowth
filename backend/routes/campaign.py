@@ -12,15 +12,20 @@ from backend.poster_engine.poster_generator import generate_poster
 campaign_bp = Blueprint("campaign", __name__, url_prefix="/campaign")
 
 
+
+
 # 🔹 CREATE CAMPAIGN
 @campaign_bp.route("/create", methods=["POST"])
 @jwt_required()
 def create_campaign():
     data = request.get_json()
 
+    if not data:
+        return error("No input data", 400)
+
     err, code = require_fields(data, ["business", "product", "offer"])
     if err:
-        return err, code
+        return err   # ✅ FIXED
 
     user_id = get_jwt_identity()
 
@@ -28,19 +33,17 @@ def create_campaign():
     product = data["product"]
     offer = data["offer"]
 
-    # 🔥 STEP 1: AI GENERATION
     ai_result = generate_content(business, product, offer)
 
     caption = ai_result.get("caption", "")
     hashtags = ai_result.get("hashtags", [])
 
-    # 🔥 STEP 2: POSTER GENERATION (FIXED)
     poster_path = generate_poster(
         business,
         product,
         offer,
         caption,
-        image_path=None  # you are not using image yet
+        image_path=None
     )
 
     campaign = {
@@ -69,22 +72,22 @@ def create_campaign():
             "status": "generated"
         }
     })
-
+# ===============================
 # 🔹 GET ALL CAMPAIGNS
+# ===============================
 @campaign_bp.route("/all", methods=["GET"])
 @jwt_required()
 def get_campaigns():
     user_id = get_jwt_identity()
 
-    user_campaigns = list(campaigns.find({"user_id": user_id}))
+    data = list(campaigns.find({"user_id": user_id}))
 
-    for c in user_campaigns:
-        c["_id"] = str(c["_id"])
+    for d in data:
+        d["_id"] = str(d["_id"])
 
     return success({
-        "campaigns": user_campaigns
+        "campaigns": data
     })
-
 
 # 🔹 GET SINGLE CAMPAIGN
 @campaign_bp.route("/<campaign_id>", methods=["GET"])

@@ -22,9 +22,13 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 def signup():
     data = request.get_json()
 
+    # ✅ Safety check
+    if not data:
+        return error("No input data", 400)
+
     err, code = require_fields(data, ["name", "email", "password"])
     if err:
-        return err, code
+        return err   # ✅ FIXED (no tuple issue)
 
     name = data["name"]
     email = data["email"]
@@ -47,7 +51,7 @@ def signup():
 
     result = users.insert_one(user)
 
-    # Create JWT token
+    # Create token
     access_token = create_access_token(identity=str(result.inserted_id))
 
     return success({
@@ -69,19 +73,30 @@ def login():
 
     print("LOGIN DATA:", data)  # DEBUG
 
+    # ✅ Safety check
+    if not data:
+        return error("No input data", 400)
+
     err, code = require_fields(data, ["email", "password"])
     if err:
-        return err, code
+        return err   # ✅ FIXED
 
     email = data["email"]
     password = data["password"]
 
     user = users.find_one({"email": email})
 
+    print("USER FROM DB:", user)  # DEBUG
+
     if not user:
         return error("Invalid credentials", 401)
 
-    if not check_password_hash(user["password"], password):
+    stored_password = user.get("password", "")
+
+    # ✅ FINAL CORRECT PASSWORD CHECK
+    valid = check_password_hash(stored_password, password)
+
+    if not valid:
         return error("Invalid credentials", 401)
 
     access_token = create_access_token(identity=str(user["_id"]))
@@ -90,8 +105,8 @@ def login():
         "access_token": access_token,
         "user": {
             "id": str(user["_id"]),
-            "name": user["name"],
-            "email": user["email"]
+            "name": user.get("name", ""),
+            "email": user.get("email", "")
         }
     }, message="Login successful")
 
@@ -112,8 +127,8 @@ def get_user():
     return success({
         "user": {
             "id": str(user["_id"]),
-            "name": user["name"],
-            "email": user["email"],
-            "created_at": str(user.get("created_at"))  # IMPORTANT FIX
+            "name": user.get("name", ""),
+            "email": user.get("email", ""),
+            "created_at": str(user.get("created_at"))
         }
     })
