@@ -111,9 +111,11 @@
 
     async function loadDashboard() {
       const res = await api.getCampaigns();
-      const campaigns = res.campaigns;
+      const campaigns = Array.isArray(res.data)
+        ? res.data
+        : (res.data?.campaigns || []);
 
-      document.getElementById('statCampaigns').textContent = campaigns.length;
+      document.getElementById('statCampaigns').textContent = (campaigns || []).length;
 
       const container = document.getElementById('campaignContainer');
       container.innerHTML = '';
@@ -151,9 +153,10 @@
         container.innerHTML += `
           <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md
                       transition-all duration-200 overflow-hidden">
-            ${c.poster_url
-              ? `<img src="${c.poster_url}" class="w-full h-40 object-cover"/>`
-              : `<div class="h-1.5 bg-gradient-to-r from-orange-400 to-amber-400"></div>`}
+                    ${c.poster_url
+                      ? `<img src="${API_BASE}/poster/${c.poster_url.split('/').pop()}" class="w-full h-40 object-cover"/>`
+                      : `<div class="h-1.5 bg-gradient-to-r from-orange-400 to-amber-400"></div>`
+                    }
             <div class="p-5">
               <div class="flex items-start justify-between gap-2 mb-2">
                 <div>

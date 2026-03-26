@@ -7,11 +7,17 @@ const API_BASE =
     ? "http://127.0.0.1:5000"
     : "https://desigrowth-2.onrender.com";
 
+
 // ===============================
-// HELPER: GET TOKEN
+// TOKEN HANDLING
 // ===============================
 function getToken() {
   return localStorage.getItem("token");
+}
+
+function clearAuth() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
 }
 
 
@@ -24,7 +30,7 @@ async function request(path, method = "GET", body = null, auth = false) {
       "Content-Type": "application/json"
     };
 
-    // 🔐 Add token if required
+    // 🔐 Attach token if needed
     if (auth) {
       const token = getToken();
       if (token) {
@@ -38,15 +44,23 @@ async function request(path, method = "GET", body = null, auth = false) {
       body: body ? JSON.stringify(body) : null
     });
 
-    // ⚠️ Handle non-JSON safely
     let data;
+
+    // ✅ Safe JSON parse
     try {
       data = await res.json();
     } catch {
       throw new Error("Invalid server response");
     }
 
-    // ❌ Handle API errors
+    // 🔴 HANDLE AUTH ERROR (IMPORTANT)
+    if (res.status === 401) {
+      clearAuth();
+      window.location.href = "login.html";
+      throw new Error("Session expired. Please login again.");
+    }
+
+    // ❌ Other errors
     if (!res.ok) {
       throw new Error(data.message || "Request failed");
     }
@@ -81,13 +95,12 @@ const api = {
     request("/campaign/create", "POST", payload, true),
 
   getCampaigns: () =>
-  request("/campaign/all", "GET", null, true),
+    request("/campaign/all", "GET", null, true),
 
 };
 
 
-
 // ===============================
-// EXPORT TO GLOBAL (IMPORTANT)
+// EXPORT GLOBAL
 // ===============================
 window.api = api;

@@ -22,14 +22,14 @@ def create_app():
     # Load config
     app.config.from_object(Config)
 
-    # ✅ Ensure MongoDB URI exists
+    # Ensure MongoDB URI exists
     if not os.getenv("MONGO_URI"):
         raise Exception("❌ MONGO_URI is missing in .env")
 
-    # Ensure folders exist
+    # Ensure poster folder exists
     os.makedirs(app.config["POSTER_FOLDER"], exist_ok=True)
 
-    # CORS
+    # CORS (use only one)
     CORS(app, resources={
         r"/*": {
             "origins": [
@@ -57,6 +57,7 @@ def create_app():
     app.register_blueprint(campaign_bp)
     app.register_blueprint(ai_bp)
 
+    # Home route
     @app.route("/")
     def home():
         return jsonify({
@@ -64,10 +65,12 @@ def create_app():
             "message": "DesiGrowth Backend Running 🚀"
         })
 
+    # ✅ Poster serving (correct)
     @app.route("/poster/<filename>")
     def serve_poster(filename):
         return send_from_directory(app.config["POSTER_FOLDER"], filename)
 
+    # Error handler
     @app.errorhandler(Exception)
     def handle_exception(e):
         print("❌ ERROR:", str(e))
