@@ -3,15 +3,19 @@ import os
 import uuid
 
 
+# 🔹 CENTER TEXT
 def center_text(draw, text, font, y, width, color=(0, 0, 0)):
     text_width = draw.textlength(text, font=font)
     x = (width - text_width) / 2
 
-    draw.text((x+2, y+2), text, fill="gray", font=font)
+    # Shadow
+    draw.text((x + 2, y + 2), text, fill="gray", font=font)
 
+    # Main text
     draw.text((x, y), text, fill=color, font=font)
 
 
+# 🔹 WRAP TEXT
 def wrap_text(text, max_chars=30):
     words = text.split()
     lines = []
@@ -21,21 +25,25 @@ def wrap_text(text, max_chars=30):
         if len(line + word) < max_chars:
             line += word + " "
         else:
-            lines.append(line)
+            lines.append(line.strip())
             line = word + " "
 
-    lines.append(line)
+    if line:
+        lines.append(line.strip())
+
     return lines
 
 
-def generate_poster(business, product, offer, caption, image_path):
+# 🔥 MAIN FUNCTION
+def generate_poster(business, product, offer, caption="", image_path=None):
 
-    output_folder = "poster_engine/generated"
+    # ✅ FIXED PATH (match Flask)
+    output_folder = os.path.join("backend", "posters", "generated")
     os.makedirs(output_folder, exist_ok=True)
 
-    width = 900
-    height = 900
+    width, height = 900, 900
 
+    # Background
     poster = Image.new("RGB", (width, height))
     draw_bg = ImageDraw.Draw(poster)
 
@@ -47,18 +55,21 @@ def generate_poster(business, product, offer, caption, image_path):
 
     draw = ImageDraw.Draw(poster)
 
+    # Card shadow
     draw.rounded_rectangle(
         [(210, 150), (710, 570)],
         radius=30,
         fill=(200, 200, 200)
     )
 
+    # Card
     draw.rounded_rectangle(
         [(200, 140), (700, 560)],
         radius=30,
         fill=(255, 255, 255)
     )
 
+    # Product Image
     if image_path and os.path.exists(image_path):
         product_img = Image.open(image_path).convert("RGBA")
         product_img = product_img.resize((350, 350))
@@ -68,6 +79,7 @@ def generate_poster(business, product, offer, caption, image_path):
 
         poster.paste(product_img, (275, 175), product_img)
 
+    # Fonts
     try:
         title_font = ImageFont.truetype("C:/Windows/Fonts/arialbd.ttf", 65)
         text_font = ImageFont.truetype("C:/Windows/Fonts/segoeui.ttf", 40)
@@ -77,38 +89,46 @@ def generate_poster(business, product, offer, caption, image_path):
         text_font = ImageFont.load_default()
         small_font = ImageFont.load_default()
 
-    center_text(draw, business.upper(), title_font, 50, width, color=(30, 30, 30))
+    # Title
+    center_text(draw, business.upper(), title_font, 50, width, (30, 30, 30))
 
+    # Line
     draw.line([(300, 110), (600, 110)], fill=(255, 100, 100), width=4)
 
+    # Product
     center_text(draw, product, text_font, 600, width)
 
-    offer = "★ " + offer + " ★"
+    # Offer box
+    offer_text = f"★ {offer} ★"
 
     draw.rounded_rectangle(
         [(200, 630), (700, 700)],
         radius=25,
         fill=(255, 90, 90)
     )
-    center_text(draw, offer, text_font, 640, width, color=(255, 255, 255))
+    center_text(draw, offer_text, text_font, 640, width, (255, 255, 255))
 
-    caption = ">> " + caption
+    # Caption
+    caption = f">> {caption or 'Best deals available now!'}"
     lines = wrap_text(caption)
 
-    y_text = 700
+    y_text = 710
     for line in lines:
-        center_text(draw, line, text_font, y_text, width, color=(50, 50, 50))
+        center_text(draw, line, text_font, y_text, width, (50, 50, 50))
         y_text += 40
 
-    center_text(draw, "Best Deals Near You!", text_font, 820, width, color=(80, 80, 80))
-
+    # Footer
+    center_text(draw, "Best Deals Near You!", text_font, 820, width, (80, 80, 80))
     draw.text((20, 860), "Powered by DesiGrowth", fill="gray", font=small_font)
 
-    draw.rectangle([(10, 10), (width-10, height-10)], outline=(100, 100, 100), width=2)
+    # Border
+    draw.rectangle([(10, 10), (width - 10, height - 10)], outline=(100, 100, 100), width=2)
 
+    # Save file
     filename = f"poster_{uuid.uuid4().hex}.png"
     filepath = os.path.join(output_folder, filename)
 
     poster.save(filepath)
 
-    return filepath
+    # ✅ IMPORTANT: return URL (NOT file path)
+    return f"/poster/{filename}"

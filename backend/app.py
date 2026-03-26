@@ -7,10 +7,10 @@ import os
 # Load env
 load_dotenv()
 
-# ✅ FIXED IMPORTS
+# Config
 from backend.config import Config
-from backend.models.db import init_db
 
+# Routes
 from backend.routes.auth import auth_bp
 from backend.routes.campaign import campaign_bp
 from backend.routes.ai import ai_bp
@@ -19,13 +19,15 @@ from backend.routes.ai import ai_bp
 def create_app():
     app = Flask(__name__)
 
+    # Load config
     app.config.from_object(Config)
+
+    # ✅ Ensure MongoDB URI exists
+    if not os.getenv("MONGO_URI"):
+        raise Exception("❌ MONGO_URI is missing in .env")
 
     # Ensure folders exist
     os.makedirs(app.config["POSTER_FOLDER"], exist_ok=True)
-
-    # Init DB
-    init_db(app.config["DATABASE_PATH"])
 
     # CORS
     CORS(app)
@@ -34,6 +36,7 @@ def create_app():
     JWTManager(app)
 
     print("🚀 Backend starting...")
+    print("MongoDB:", "CONNECTED" if os.getenv("MONGO_URI") else "MISSING")
     print("GEMINI:", "SET" if os.getenv("GEMINI_API_KEY") else "MISSING")
     print("JWT:", "SET" if os.getenv("JWT_SECRET_KEY") else "MISSING")
 

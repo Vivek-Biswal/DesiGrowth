@@ -49,3 +49,23 @@ def generate_marketing_content(data):
             "caption": "Special offer available now!",
             "hashtags": "#sale #offer"
         }
+def generate_content(business, product, offer):
+    data = {
+        "business": business,
+        "product": product,
+        "offer": offer,
+        "festival": "",
+        "location": ""
+    }
+
+    result = generate_marketing_content(data)
+
+    # Convert hashtags string → list
+    hashtags = result.get("hashtags", "")
+    if isinstance(hashtags, str):
+        hashtags = hashtags.split()
+
+    return {
+        "caption": result.get("caption", ""),
+        "hashtags": hashtags
+    }
