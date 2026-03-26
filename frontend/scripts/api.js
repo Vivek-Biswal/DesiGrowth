@@ -43,7 +43,7 @@ async function handleResponse(res) {
   // 🔥 ADD THIS BLOCK
   if (res.status === 401) {
     localStorage.clear();
-    window.location.href = '/pages/login.html';
+    window.location.href = './pages/login.html';
     return;
   }
 
