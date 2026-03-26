@@ -154,4 +154,4 @@ const api = {
 // ===============================
 // EXPORT (IMPORTANT)
 // ===============================
-export default api;
+window.api = api;
