@@ -197,6 +197,48 @@
       }
     }
   </script>
+<script type="module">
+import { createCampaign } from "../scripts/api.js";
+
+const form = document.querySelector("form");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Please login first");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const data = {
+        business: document.querySelector("#business").value,
+        product: document.querySelector("#product").value,
+        offer: document.querySelector("#offer").value
+    };
+
+    const res = await createCampaign(data, token);
+
+    if (res.status === "success") {
+        alert("Campaign Created!");
+
+        localStorage.setItem("latest_campaign", JSON.stringify({
+            business: data.business,
+            product: data.product,
+            offer: data.offer,
+            caption: res.caption,
+            hashtags: res.hashtags,
+            poster_url: res.poster_url,
+            status: "generated"
+        }));
+        window.location.href = "preview.html";
+    } else {
+        alert(res.error || "Something went wrong");
+    }
+});
+</script>
 
 </body>
 </html>

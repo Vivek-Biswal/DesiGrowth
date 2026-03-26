@@ -1,7 +1,10 @@
 // ===============================
 // API BASE URL
 // ===============================
-const API_BASE = 'https://desigrowth-2.onrender.com';
+
+// 🔥 CHANGE THIS IF LOCAL TESTING
+const API_BASE = 'http://127.0.0.1:5000';
+// const API_BASE = 'https://desigrowth-2.onrender.com';
 
 
 // ===============================
@@ -27,10 +30,16 @@ function getHeaders(auth = true) {
 // HELPER: HANDLE RESPONSE
 // ===============================
 async function handleResponse(res) {
-  const data = await res.json();
+  let data;
+
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error("Invalid server response");
+  }
 
   if (!res.ok) {
-    throw new Error(data.message || data.error || 'Something went wrong');
+    throw new Error(data.error || data.message || 'Something went wrong');
   }
 
   return data;
@@ -99,9 +108,27 @@ const api = {
     return handleResponse(res);
   },
 
+  async getSingleCampaign(id) {
+    const res = await fetch(`${API_BASE}/campaign/${id}`, {
+      method: 'GET',
+      headers: getHeaders(true)
+    });
+
+    return handleResponse(res);
+  },
+
+  async deleteCampaign(id) {
+    const res = await fetch(`${API_BASE}/campaign/${id}`, {
+      method: 'DELETE',
+      headers: getHeaders(true)
+    });
+
+    return handleResponse(res);
+  },
+
 
   // =========================
-  // 🤖 AI GENERATION
+  // 🤖 AI (OPTIONAL DIRECT CALL)
   // =========================
 
   async generateAI(data) {
@@ -113,5 +140,10 @@ const api = {
 
     return handleResponse(res);
   }
-
 };
+
+
+// ===============================
+// EXPORT (IMPORTANT)
+// ===============================
+export default api;
