@@ -99,7 +99,7 @@ function renderSidebar(active = '') {
           ${navItem('dashboard', 'Dashboard', '/pages/dashboard.html', active)}
           ${navItem('builder', 'Create Campaign', '/pages/builder.html', active)}
           ${navItem('analytics', 'Analytics', '/pages/analytics.html', active)}
-          ${navItem('profile', 'Profile', '/pages/ads.html', active)}
+         ${navItem('profile', 'Profile', '/pages/profile.html', active)}
 
         </nav>
       </div>
@@ -127,7 +127,7 @@ function renderMobileNav(active = '') {
       ${mobileItem('dashboard', '🏠', '/pages/dashboard.html', active)}
       ${mobileItem('builder', '➕', '/pages/builder.html', active)}
       ${mobileItem('analytics', '📊', '/pages/analytics.html', active)}
-      ${mobileItem('profile', '👤', '/pages/ads.html', active)}
+      ${mobileItem('profile', '👤', '/pages/profile.html', active)}
 
     </div>
   `;

@@ -30,7 +30,15 @@ def create_app():
     os.makedirs(app.config["POSTER_FOLDER"], exist_ok=True)
 
     # CORS
-    CORS(app)
+    CORS(app, resources={
+        r"/*": {
+            "origins": [
+                "http://localhost:5500",
+                "http://127.0.0.1:5500",
+                "https://your-frontend.vercel.app"
+            ]
+        }
+    })
 
     # JWT
     JWTManager(app)

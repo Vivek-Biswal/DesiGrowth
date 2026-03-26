@@ -3,8 +3,10 @@
 // ===============================
 
 // 🔥 CHANGE THIS IF LOCAL TESTING
-const API_BASE = 'http://127.0.0.1:5000';
-// const API_BASE = 'https://desigrowth-2.onrender.com';
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://127.0.0.1:5000"
+    : "https://desigrowth-2.onrender.com";
 
 
 // ===============================
@@ -38,13 +40,19 @@ async function handleResponse(res) {
     throw new Error("Invalid server response");
   }
 
+  // 🔥 ADD THIS BLOCK
+  if (res.status === 401) {
+    localStorage.clear();
+    window.location.href = '/pages/login.html';
+    return;
+  }
+
   if (!res.ok) {
     throw new Error(data.error || data.message || 'Something went wrong');
   }
 
   return data;
 }
-
 
 // ===============================
 // API OBJECT

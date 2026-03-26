@@ -74,7 +74,7 @@ def login():
 
     return success({
         "message": "Login successful",
-        "token": access_token,
+        "access_token": access_token,
         "user": {
             "id": str(user["_id"]),
             "name": user["name"],

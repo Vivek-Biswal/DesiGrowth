@@ -80,14 +80,9 @@ def generate_poster(business, product, offer, caption="", image_path=None):
         poster.paste(product_img, (275, 175), product_img)
 
     # Fonts
-    try:
-        title_font = ImageFont.truetype("C:/Windows/Fonts/arialbd.ttf", 65)
-        text_font = ImageFont.truetype("C:/Windows/Fonts/segoeui.ttf", 40)
-        small_font = ImageFont.truetype("C:/Windows/Fonts/segoeui.ttf", 22)
-    except:
-        title_font = ImageFont.load_default()
-        text_font = ImageFont.load_default()
-        small_font = ImageFont.load_default()
+    title_font = ImageFont.load_default()
+    text_font = ImageFont.load_default()
+    small_font = ImageFont.load_default()
 
     # Title
     center_text(draw, business.upper(), title_font, 50, width, (30, 30, 30))

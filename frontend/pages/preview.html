@@ -106,7 +106,7 @@
 
               <!-- Poster or gradient banner -->
               ${data.poster_url
-                ? `<img src="http://127.0.0.1:5000${data.poster_url}" class="w-full"/>`
+                ? `<img src="${API_BASE}${data.poster_url}">`
                 : `<div class="bg-gradient-to-br from-orange-500 via-orange-400 to-amber-400 p-8 text-white">
                     <p class="text-sm font-medium text-orange-100 mb-1">${data.business || ''}</p>
                     <h2 class="text-2xl font-extrabold leading-tight mb-2">${data.product}</h2>

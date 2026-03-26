@@ -58,13 +58,17 @@ def create_campaign():
     result = campaigns.insert_one(campaign)
 
     return success({
-        "message": "Campaign generated successfully",
-        "campaign_id": str(result.inserted_id),
-        "caption": caption,
-        "hashtags": hashtags,
-        "poster_url": poster_path
+        "campaign": {
+            "_id": str(result.inserted_id),
+            "business": business,
+            "product": product,
+            "offer": offer,
+            "caption": caption,
+            "hashtags": hashtags,
+            "poster_url": poster_path,
+            "status": "generated"
+        }
     })
-
 
 # 🔹 GET ALL CAMPAIGNS
 @campaign_bp.route("/all", methods=["GET"])
