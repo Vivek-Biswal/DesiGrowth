@@ -19,6 +19,13 @@ from backend.routes.ads import ads_bp
 
 def create_app():
     app = Flask(__name__)
+    from flask_cors import CORS
+
+    CORS(
+        app,
+        resources={r"/*": {"origins": "*"}},
+        supports_credentials=True
+    )
 
     # Load config
     app.config.from_object(Config)
