@@ -69,6 +69,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(campaign_bp)
     app.register_blueprint(ai_bp)
+    app.register_blueprint(ads_bp)
 
     # ===============================
     # HEALTH CHECK
