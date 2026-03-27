@@ -114,9 +114,6 @@
       const campaigns = Array.isArray(res.data)
         ? res.data
         : (res.data?.campaigns || []);
-        
-        const adsRes = await api.getAds();
-        const ads = adsRes.data.ads;
 
       document.getElementById('statCampaigns').textContent = (campaigns || []).length;
 
@@ -145,7 +142,6 @@
       }
 
       campaigns.forEach(c => {
-        const campaignAds = ads.filter(a => a.campaign_id === c._id);
         // Normalize hashtags to array
         const rawTags = Array.isArray(c.hashtags)
           ? c.hashtags
@@ -172,76 +168,62 @@
               </div>
               <p class="text-sm text-gray-500 leading-relaxed mb-3 line-clamp-2">${c.caption || ''}</p>
               <div class="flex flex-wrap gap-1.5 mb-4">${tagsHtml}</div>
-<div class="pt-3 border-t border-gray-50">
-
-<div class="flex items-center justify-between mb-2">
-  ${statusBadge(c.status)}
-  <span class="text-xs text-gray-400">${formatDate(c.created_at)}</span>
-</div>
-
-<!-- ✅ MOVE ADS HERE -->
-${campaignAds.map(a => `
-  <div class="text-xs mt-1">
-    ${
-      a.platform === "whatsapp"
-        ? "🟢 WhatsApp Sent"
-        : a.platform === "meta"
-        ? "🟡 Meta Live"
-        : "🟡 Google Live"
-    }
-  </div>
-`).join('')}
-
-  <!-- 🔥 ADD BUTTONS HERE -->
-  <div class="flex gap-2 mt-2">
-    <button onclick="runAd('${c._id}', 'whatsapp')"
-      class="flex-1 bg-green-500 hover:bg-green-600 text-white text-xs py-2 rounded-lg">
-      WhatsApp
-    </button>
-
-    <button onclick="runAd('${c._id}', 'meta')"
-      class="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-xs py-2 rounded-lg">
-      Meta
-    </button>
-
-    <button onclick="runAd('${c._id}', 'google')"
-      class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white text-xs py-2 rounded-lg">
-      Google
-    </button>
-  </div>
-
-</div>
+              <div class="flex items-center justify-between pt-3 border-t border-gray-50">
+                ${statusBadge(c.status)}
+                <span class="text-xs text-gray-400">${formatDate(c.created_at)}</span>
+              </div>
             </div>
           </div>`;
       });
     }
-async function runAd(campaignId, platform) {
+<<<<<<< HEAD
+async function runAd(campaignId) {
+
+  // 👇 Ask user for platform (simple prompt for now)
+  const choice = prompt(
+    "Choose platform:\n1 = WhatsApp\n2 = Meta Ads\n3 = Google Ads"
+  );
+
+  let platforms = [];
+
+  if (choice === "1") platforms = ["whatsapp"];
+  else if (choice === "2") platforms = ["meta"];
+  else if (choice === "3") platforms = ["google"];
+  else {
+    alert("Invalid choice");
+    return;
+  }
 
   try {
     const res = await api.publishAd({
       campaign_id: campaignId,
-      platforms: [platform]
+      platforms: platforms
     });
 
     const ad = res.data.ads[0];
 
-    if (platform === "whatsapp") {
+    // 🟢 WhatsApp (REAL)
+    if (ad.platform === "whatsapp") {
       window.open(ad.external_ad_id, "_blank");
     }
 
-    else if (platform === "meta") {
-      alert("✅ Ad is LIVE on Meta (simulated)");
+    // 🟡 Meta (SIMULATED)
+    else if (ad.platform === "meta") {
+      alert("✅ Ad is now LIVE on Meta (simulated)");
     }
 
-    else if (platform === "google") {
-      alert("✅ Ad is LIVE on Google (simulated)");
+    // 🟡 Google (SIMULATED)
+    else if (ad.platform === "google") {
+      alert("✅ Ad is now LIVE on Google (simulated)");
     }
 
   } catch (err) {
     alert(err.message);
   }
-
 }
+=======
+
+>>>>>>> parent of d50c4b8 (Add WhatsApp ad publish flow and URL encoding)
     loadDashboard();
   </script>
 
