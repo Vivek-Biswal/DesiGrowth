@@ -5,13 +5,13 @@ def get_product_image(product):
 
     base_path = os.path.join("backend", "assets")
 
-    if "vegetable" in product or "grocery" in product:
-        folder = os.path.join(base_path, "vegetables")
+    if "groceries" in product:
+        folder = os.path.join(base_path, "groceries")
 
     elif "shoe" in product:
         folder = os.path.join(base_path, "shoes")
 
-    elif "electronic" in product:
+    elif "XYZ_smartphone" in product or "XYZ_laptop" in product or "speaker" in product:
         folder = os.path.join(base_path, "electronics")
 
     else:
