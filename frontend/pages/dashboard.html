@@ -184,17 +184,43 @@
       });
     }
 async function runAd(campaignId) {
+
+  // 👇 Ask user for platform (simple prompt for now)
+  const choice = prompt(
+    "Choose platform:\n1 = WhatsApp\n2 = Meta Ads\n3 = Google Ads"
+  );
+
+  let platforms = [];
+
+  if (choice === "1") platforms = ["whatsapp"];
+  else if (choice === "2") platforms = ["meta"];
+  else if (choice === "3") platforms = ["google"];
+  else {
+    alert("Invalid choice");
+    return;
+  }
+
   try {
     const res = await api.publishAd({
       campaign_id: campaignId,
-      platforms: ["whatsapp"] // only WhatsApp for now
+      platforms: platforms
     });
 
     const ad = res.data.ads[0];
 
+    // 🟢 WhatsApp (REAL)
     if (ad.platform === "whatsapp") {
-      // 🔥 OPEN WHATSAPP
       window.open(ad.external_ad_id, "_blank");
+    }
+
+    // 🟡 Meta (SIMULATED)
+    else if (ad.platform === "meta") {
+      alert("✅ Ad is now LIVE on Meta (simulated)");
+    }
+
+    // 🟡 Google (SIMULATED)
+    else if (ad.platform === "google") {
+      alert("✅ Ad is now LIVE on Google (simulated)");
     }
 
   } catch (err) {
