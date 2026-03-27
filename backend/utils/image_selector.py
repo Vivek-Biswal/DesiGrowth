@@ -3,27 +3,24 @@ import random
 def get_product_image(product):
     product = product.lower()
 
-    images = {
-        "laptop": "XYZ_laptop.jpeg",
-        "smartphone": "XYZ_smartphone.jpeg",
-        "phone": "XYZ_smartphone.jpeg",
-        "speaker": "speaker.jpeg",
+    base_path = os.path.join("backend", "assets")
 
-        "butter": "amul_butter.jpeg",
-        "bread": "bread.jpeg",
-        "vegetable": "fruits and vegetables.jpeg",
-        "fruit": "fruits and vegetables.jpeg",
+    if "groceries" in product:
+        folder = os.path.join(base_path, "groceries")
 
-        "hair oil": "hairoil.jpeg",
-        "oil": "soyabean oil.jpeg",
+    elif "shoe" in product:
+        folder = os.path.join(base_path, "shoes")
 
-        "onion": "onion.jpeg",
-        "semolina": "semolina.jpeg"
-    }
+    elif "XYZ_smartphone" in product or "XYZ_laptop" in product or "speaker" in product:
+        folder = os.path.join(base_path, "electronics")
 
-    for key in images:
-        if key in product:
-            return images[key]
+    else:
+        folder = os.path.join(base_path, "default")
 
-    # If nothing matches pick random image
+    if os.path.exists(folder):
+        images = os.listdir(folder)
+        if images:
+            return os.path.join(folder, random.choice(images))
+
     return None
+
