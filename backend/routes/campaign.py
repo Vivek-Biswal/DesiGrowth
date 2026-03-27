@@ -19,7 +19,7 @@ campaign_bp = Blueprint("campaign", __name__, url_prefix="/campaign")
 @jwt_required()
 def create_campaign():
     data = request.get_json()
-
+#hello
     if not data:
         return error("No input data", 400)
 
