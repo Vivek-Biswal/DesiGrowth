@@ -16,7 +16,7 @@ from backend.routes.campaign import campaign_bp
 from backend.routes.ai import ai_bp
 
 
-def create_app():
+def create_app(*args, **kwargs):
     app = Flask(__name__)
 
     # ===============================
