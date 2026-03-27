@@ -19,7 +19,9 @@ from backend.routes.ai import ai_bp
 def create_app():
     app = Flask(__name__)
 
-    # Load config
+    # ===============================
+    # 🔧 CONFIG
+    # ===============================
     app.config.from_object(Config)
 
     # Ensure MongoDB URI exists
@@ -29,20 +31,27 @@ def create_app():
     # Ensure poster folder exists
     os.makedirs(app.config["POSTER_FOLDER"], exist_ok=True)
 
-    # CORS (use only one)
-    CORS(app, resources={
-        r"/*": {
-            "origins": [
-                "http://localhost:5500",
-                "http://127.0.0.1:5500",
-                "https://your-frontend.vercel.app"
-            ]
-        }
-    })
+    # ===============================
+    # 🌐 CORS (FINAL FIX)
+    # ===============================
+    CORS(app, supports_credentials=True)
 
-    # JWT
+    # ✅ EXTRA SAFETY (VERY IMPORTANT)
+    @app.after_request
+    def add_headers(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+        return response
+
+    # ===============================
+    # 🔐 JWT
+    # ===============================
     JWTManager(app)
 
+    # ===============================
+    # 🪵 LOGGING
+    # ===============================
     print("🚀 Backend starting...")
     print("MongoDB:", "CONNECTED" if os.getenv("MONGO_URI") else "MISSING")
     print("GEMINI:", "SET" if os.getenv("GEMINI_API_KEY") else "MISSING")
@@ -52,12 +61,16 @@ def create_app():
     def log_request():
         print(f"{request.method} {request.path}")
 
-    # Register routes
+    # ===============================
+    # 🔗 ROUTES
+    # ===============================
     app.register_blueprint(auth_bp)
     app.register_blueprint(campaign_bp)
     app.register_blueprint(ai_bp)
 
-    # Home route
+    # ===============================
+    # 🏠 HOME
+    # ===============================
     @app.route("/")
     def home():
         return jsonify({
@@ -65,12 +78,16 @@ def create_app():
             "message": "DesiGrowth Backend Running 🚀"
         })
 
-    # ✅ Poster serving (correct)
+    # ===============================
+    # 🖼️ POSTER SERVING
+    # ===============================
     @app.route("/poster/<filename>")
     def serve_poster(filename):
         return send_from_directory(app.config["POSTER_FOLDER"], filename)
 
-    # Error handler
+    # ===============================
+    # ❌ ERROR HANDLER
+    # ===============================
     @app.errorhandler(Exception)
     def handle_exception(e):
         print("❌ ERROR:", str(e))
@@ -79,6 +96,9 @@ def create_app():
     return app
 
 
+# ===============================
+# 🚀 RUN SERVER
+# ===============================
 if __name__ == "__main__":
     app = create_app()
     port = int(os.environ.get("PORT", 5000))
