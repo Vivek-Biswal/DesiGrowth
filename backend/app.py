@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 import os
 
-# Load env
+# Load environment variables
 load_dotenv()
 
 # Config
@@ -16,48 +16,42 @@ from backend.routes.campaign import campaign_bp
 from backend.routes.ai import ai_bp
 
 
-def create_app(*args, **kwargs):
+def create_app():
     app = Flask(__name__)
 
-    # ===============================
-    # 🔧 CONFIG
-    # ===============================
+    # Load config
     app.config.from_object(Config)
 
-    # Ensure MongoDB URI exists
+    # ✅ Ensure MongoDB URI exists
     if not os.getenv("MONGO_URI"):
-        raise Exception("❌ MONGO_URI is missing in .env")
+        raise Exception("❌ MONGO_URI is missing")
 
-    # Ensure poster folder exists
+    # ✅ Ensure poster folder exists
     os.makedirs(app.config["POSTER_FOLDER"], exist_ok=True)
 
     # ===============================
-    # 🌐 CORS (FINAL FIX)
+    # ✅ CORS (FINAL FIX FOR VERCEL)
     # ===============================
-    CORS(app, resources={
-        r"/*": {
-            "origins": [
-                "https://desi-growth.vercel.app",
-                "http://localhost:5500",
-                "http://127.0.0.1:5500"
-            ]
-        }
-    }, supports_credentials=True)
+    CORS(
+        app,
+        supports_credentials=True,
+        resources={r"/*": {"origins": "*"}}
+    )
 
-    # ✅ EXTRA SAFETY (VERY IMPORTANT)
     @app.after_request
-    def add_headers(response):
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
-        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+    def after_request(response):
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
         return response
 
     # ===============================
-    # 🔐 JWT
+    # JWT
     # ===============================
     JWTManager(app)
 
     # ===============================
-    # 🪵 LOGGING
+    # LOGGING
     # ===============================
     print("🚀 Backend starting...")
     print("MongoDB:", "CONNECTED" if os.getenv("MONGO_URI") else "MISSING")
@@ -69,14 +63,14 @@ def create_app(*args, **kwargs):
         print(f"{request.method} {request.path}")
 
     # ===============================
-    # 🔗 ROUTES
+    # ROUTES
     # ===============================
     app.register_blueprint(auth_bp)
     app.register_blueprint(campaign_bp)
     app.register_blueprint(ai_bp)
 
     # ===============================
-    # 🏠 HOME
+    # HEALTH CHECK
     # ===============================
     @app.route("/")
     def home():
@@ -86,14 +80,14 @@ def create_app(*args, **kwargs):
         })
 
     # ===============================
-    # 🖼️ POSTER SERVING
+    # POSTER SERVING
     # ===============================
     @app.route("/poster/<filename>")
     def serve_poster(filename):
         return send_from_directory(app.config["POSTER_FOLDER"], filename)
 
     # ===============================
-    # ❌ ERROR HANDLER
+    # ERROR HANDLER
     # ===============================
     @app.errorhandler(Exception)
     def handle_exception(e):
@@ -104,11 +98,14 @@ def create_app(*args, **kwargs):
 
 
 # ===============================
-# 🚀 RUN SERVER
+# ✅ IMPORTANT FOR GUNICORN
+# ===============================
+app = create_app()
+
+
+# ===============================
+# LOCAL RUN
 # ===============================
 if __name__ == "__main__":
-    app = create_app()
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-    
-app = create_app()
+    app.run(host="0.0.0.0", port=port, debug=True)
