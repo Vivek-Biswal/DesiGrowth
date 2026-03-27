@@ -14,6 +14,7 @@ from backend.config import Config
 from backend.routes.auth import auth_bp
 from backend.routes.campaign import campaign_bp
 from backend.routes.ai import ai_bp
+from backend.routes.ads import ads_bp
 
 
 def create_app():
