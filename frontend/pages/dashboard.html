@@ -142,6 +142,7 @@
       }
 
       campaigns.forEach(c => {
+        console.log(c);
         // Normalize hashtags to array
         const rawTags = Array.isArray(c.hashtags)
           ? c.hashtags
@@ -172,11 +173,34 @@
                 ${statusBadge(c.status)}
                 <span class="text-xs text-gray-400">${formatDate(c.created_at)}</span>
               </div>
+              <div class="mt-2">
+              <button onclick="runAd('${c._id}')"
+                class="w-full bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-2 rounded-lg">
+                🚀 Run Ad
+              </button>
+            </div>
             </div>
           </div>`;
       });
     }
+async function runAd(campaignId) {
+  try {
+    const res = await api.publishAd({
+      campaign_id: campaignId,
+      platforms: ["whatsapp"] // only WhatsApp for now
+    });
 
+    const ad = res.data.ads[0];
+
+    if (ad.platform === "whatsapp") {
+      // 🔥 OPEN WHATSAPP
+      window.open(ad.external_ad_id, "_blank");
+    }
+
+  } catch (err) {
+    alert(err.message);
+  }
+}
     loadDashboard();
   </script>
 
