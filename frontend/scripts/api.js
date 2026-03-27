@@ -1,11 +1,11 @@
 // ===============================
-// API BASE URL (DEV + PRODUCTION)
+// API BASE URL (PRODUCTION + LOCAL)
 // ===============================
 const API_BASE =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:5000"
-    : "https://desigrowth-2.onrender.com";
+    : "https://desigrowth-ar7l.onrender.com";
 
 
 // ===============================
@@ -34,13 +34,13 @@ function clearAuth() {
 async function request(path, method = "GET", body = null, auth = false) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000); // 15 sec timeout
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     const headers = {
       "Content-Type": "application/json"
     };
 
-    // 🔐 Attach token
+    // 🔐 Attach token if needed
     if (auth) {
       const token = getToken();
       if (token) {
@@ -58,21 +58,20 @@ async function request(path, method = "GET", body = null, auth = false) {
     clearTimeout(timeout);
 
     let data;
-
     try {
       data = await res.json();
     } catch {
       throw new Error("Invalid server response");
     }
 
-    // 🔴 AUTH ERROR
+    // 🔐 Handle expired session
     if (res.status === 401) {
       clearAuth();
       window.location.href = "/pages/login.html";
       throw new Error("Session expired. Please login again.");
     }
 
-    // ❌ OTHER ERRORS
+    // ❌ Other errors
     if (!res.ok) {
       throw new Error(data.message || data.error || "Request failed");
     }
@@ -82,7 +81,6 @@ async function request(path, method = "GET", body = null, auth = false) {
   } catch (err) {
     console.error("❌ API ERROR:", err.message);
 
-    // 🚨 NETWORK ERROR (VERY IMPORTANT)
     if (err.name === "AbortError") {
       throw new Error("Server timeout. Try again.");
     }
@@ -104,29 +102,40 @@ const api = {
   // 🔐 AUTH
   signup: async (payload) => {
     const res = await request("/auth/signup", "POST", payload);
-    setAuth(res); // optional (if signup returns token)
+    setAuth(res);
     return res;
   },
 
   login: async (payload) => {
     const res = await request("/auth/login", "POST", payload);
-    setAuth(res); // ✅ IMPORTANT
+    setAuth(res);
     return res;
   },
 
-  getUser: () =>
-    request("/auth/user", "GET", null, true),
+  getUser: async () => {
+    const res = await request("/auth/user", "GET", null, true);
+    return res.data.user; // ✅ FIXED
+  },
 
 
-  // 📢 CAMPAIGN
+  // 📢 CAMPAIGNS
   createCampaign: (payload) =>
     request("/campaign/create", "POST", payload, true),
 
-  getCampaigns: () =>
-    request("/campaign/all", "GET", null, true),
+  getCampaigns: async () => {
+    const res = await request("/campaign/all", "GET", null, true);
+    return res.data.campaigns; // ✅ FIXED
+  },
 
+
+  // 📢 ADS
   publishAd: (payload) =>
-  request("/ads/publish", "POST", payload, true),
+    request("/ads/publish", "POST", payload, true),
+
+  getAds: async () => {
+    const res = await request("/ads/all", "GET", null, true);
+    return res.data.ads || [];
+  }
 };
 
 

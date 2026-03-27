@@ -19,39 +19,40 @@ from backend.routes.ads import ads_bp
 
 def create_app():
     app = Flask(__name__)
-    from flask_cors import CORS
 
+    # ===============================
+    # CONFIG
+    # ===============================
+    app.config.from_object(Config)
+
+    # ===============================
+    # ✅ FINAL CORS FIX (IMPORTANT)
+    # ===============================
     CORS(
         app,
-        resources={r"/*": {"origins": "*"}},
+        origins="*",
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         supports_credentials=True
     )
 
-    # Load config
-    app.config.from_object(Config)
+    # ===============================
+    # OPTIONAL: EXTRA SAFETY HEADERS
+    # ===============================
+    @app.after_request
+    def after_request(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        return response
 
-    # ✅ Ensure MongoDB URI exists
+    # ===============================
+    # ENV CHECK
+    # ===============================
     if not os.getenv("MONGO_URI"):
         raise Exception("❌ MONGO_URI is missing")
 
-    # ✅ Ensure poster folder exists
     os.makedirs(app.config["POSTER_FOLDER"], exist_ok=True)
-
-    # ===============================
-    # ✅ CORS (FINAL FIX FOR VERCEL)
-    # ===============================
-    CORS(
-        app,
-        supports_credentials=True,
-        resources={r"/*": {"origins": "*"}}
-    )
-
-    @app.after_request
-    def after_request(response):
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-        response.headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-        return response
 
     # ===============================
     # JWT
@@ -107,7 +108,7 @@ def create_app():
 
 
 # ===============================
-# ✅ IMPORTANT FOR GUNICORN
+# GUNICORN ENTRY
 # ===============================
 app = create_app()
 
