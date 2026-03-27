@@ -124,9 +124,6 @@ const api = {
 
   getCampaigns: () =>
     request("/campaign/all", "GET", null, true),
-
-  publishAd: (payload) =>
-  request("/ads/publish", "POST", payload, true),
 };
 
 
