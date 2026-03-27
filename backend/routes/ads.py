@@ -56,7 +56,8 @@ def publish_ad():
 {' '.join(campaign.get('hashtags', []))}
                 """
 
-                whatsapp_url = f"https://wa.me/?text={message}"
+                import urllib.parse
+                whatsapp_url = f"https://wa.me/?text={urllib.parse.quote(message)}"
 
                 ad_entry["status"] = "ready"
                 ad_entry["external_ad_id"] = whatsapp_url

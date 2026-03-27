@@ -145,7 +145,11 @@
       }
 
       campaigns.forEach(c => {
+<<<<<<< HEAD
         const campaignAds = ads.filter(a => a.campaign_id === c._id);
+=======
+        console.log(c);
+>>>>>>> parent of 11b8f15 (revert)
         // Normalize hashtags to array
         const rawTags = Array.isArray(c.hashtags)
           ? c.hashtags
@@ -172,6 +176,7 @@
               </div>
               <p class="text-sm text-gray-500 leading-relaxed mb-3 line-clamp-2">${c.caption || ''}</p>
               <div class="flex flex-wrap gap-1.5 mb-4">${tagsHtml}</div>
+<<<<<<< HEAD
 <div class="pt-3 border-t border-gray-50">
 
 <div class="flex items-center justify-between mb-2">
@@ -211,11 +216,42 @@ ${campaignAds.map(a => `
   </div>
 
 </div>
+=======
+              <div class="flex items-center justify-between pt-3 border-t border-gray-50">
+                ${statusBadge(c.status)}
+                <span class="text-xs text-gray-400">${formatDate(c.created_at)}</span>
+              </div>
+              <div class="mt-2">
+              <button onclick="runAd('${c._id}')"
+                class="w-full bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-2 rounded-lg">
+                🚀 Run Ad
+              </button>
+            </div>
+>>>>>>> parent of 11b8f15 (revert)
             </div>
           </div>`;
       });
     }
+<<<<<<< HEAD
 async function runAd(campaignId, platform) {
+=======
+async function runAd(campaignId) {
+
+  // 👇 Ask user for platform (simple prompt for now)
+  const choice = prompt(
+    "Choose platform:\n1 = WhatsApp\n2 = Meta Ads\n3 = Google Ads"
+  );
+
+  let platforms = [];
+
+  if (choice === "1") platforms = ["whatsapp"];
+  else if (choice === "2") platforms = ["meta"];
+  else if (choice === "3") platforms = ["google"];
+  else {
+    alert("Invalid choice");
+    return;
+  }
+>>>>>>> parent of 11b8f15 (revert)
 
   try {
     const res = await api.publishAd({
@@ -240,7 +276,10 @@ async function runAd(campaignId, platform) {
   } catch (err) {
     alert(err.message);
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 11b8f15 (revert)
 }
     loadDashboard();
   </script>
