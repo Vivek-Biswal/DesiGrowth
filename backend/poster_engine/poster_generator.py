@@ -35,7 +35,7 @@ def wrap_text(text, max_chars=30):
 
 
 # 🔥 MAIN FUNCTION
-def generate_poster(business, product, offer, caption="", image_path=None):
+def generate_poster(business, product, offer, caption="", image_path = get_product_image(product)):
 
     # ✅ FIXED PATH (match Flask)
     output_folder = os.path.join("backend", "posters")
