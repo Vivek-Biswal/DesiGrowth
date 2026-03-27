@@ -34,12 +34,19 @@ def create_app():
     # ===============================
     # 🌐 CORS (FINAL FIX)
     # ===============================
-    CORS(app, supports_credentials=True)
+    CORS(app, resources={
+        r"/*": {
+            "origins": [
+                "https://desi-growth.vercel.app",
+                "http://localhost:5500",
+                "http://127.0.0.1:5500"
+            ]
+        }
+    }, supports_credentials=True)
 
     # ✅ EXTRA SAFETY (VERY IMPORTANT)
     @app.after_request
     def add_headers(response):
-        response.headers["Access-Control-Allow-Origin"] = "*"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
         response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
         return response
